@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/add_subject_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp"
+        android:text="Add Subject"
+        android:textColor="?colorPrimary"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!-- Note -->
+    <TextView
+        android:id="@+id/tv_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Note: Admin can add same subject with different classes (e.g., 1-5 Math fees 350Rs)."
+        android:textColor="#666666"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:padding="4dp"
+        android:lineSpacingExtra="2dp"
+        android:layout_marginBottom="20dp"/>
+
+    <!-- Subject Name -->
+    <EditText
+        android:id="@+id/et_subject_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/input_background"
+        android:hint="Subject Name"
+        android:inputType="textCapWords"
+        android:padding="15dp"
+        android:textColor="#000000"
+        android:textColorHint="#ACACAC" />
+
+    <!-- Class From - To -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <!-- Left Side (Class From) -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Class From"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp" />
+
+            <Spinner
+                android:id="@+id/sp_class_from"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/input_background"
+                android:padding="12dp" />
+        </LinearLayout>
+
+        <!-- Right Side (Class To) -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Class To"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp" />
+
+            <Spinner
+                android:id="@+id/sp_class_to"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/input_background"
+                android:padding="12dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <!-- Fees -->
+    <EditText
+        android:id="@+id/et_fees"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/input_background"
+        android:hint="Fees"
+        android:inputType="number"
+        android:padding="15dp"
+        android:textColor="#000000"
+        android:textColorHint="#ACACAC" />
+
+</LinearLayout>

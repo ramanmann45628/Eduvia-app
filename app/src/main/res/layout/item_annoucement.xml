@@ -1,0 +1,77 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/announcement_card"
+    android:layout_marginBottom="12dp">
+
+    <!-- Top Row: Title + Delete Icon -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Title"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#000"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true" />
+
+        <ImageView
+            android:id="@+id/ivDelete"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_delete"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="Delete"
+            app:tint="#FF0000" />
+    </RelativeLayout>
+
+    <!-- Message -->
+    <TextView
+        android:id="@+id/tvMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Message content goes here"
+        android:textSize="16sp"
+        android:textStyle="italic"
+        android:textColor="#555"
+        android:layout_marginTop="8dp"/>
+
+
+    <!-- Start and Expiry Date/Time -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="4dp"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/tvStartDateTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Start: 01-01-2025 10:00 AM"
+            android:textSize="13sp"
+            android:textColor="#5B5B5B"/>
+
+        <TextView
+            android:id="@+id/tvExpiryDateTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Expiry: 05-01-2025 04:00 PM"
+            android:textSize="13sp"
+            android:textColor="#5B5B5B"
+            android:gravity="end"/>
+    </LinearLayout>
+
+</LinearLayout>

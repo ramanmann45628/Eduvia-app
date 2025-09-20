@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header with Title and Edit -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Add Student"
+                android:textColor="#313131"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Row with Full Name + Email + Profile Image -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/etFullName"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@drawable/input_background"
+                    android:hint="Full name"
+                    android:padding="14dp" />
+
+                <EditText
+                    android:id="@+id/etEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/input_background"
+                    android:hint="Email address"
+                    android:inputType="textEmailAddress"
+                    android:padding="14dp" />
+            </LinearLayout>
+
+            <!-- Profile Image Placeholder -->
+            <FrameLayout
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_marginStart="14dp"
+                android:background="@drawable/input_background"
+                android:foregroundGravity="center">
+
+                <ImageView
+                    android:id="@+id/imgProfile"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:layout_gravity="center"
+                    android:src="@android:drawable/ic_menu_camera"
+                    app:tint="@android:color/darker_gray" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <!-- Contact No. + DOB -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <EditText
+                android:id="@+id/etContact"
+                android:layout_width="0dp"
+                android:layout_height="55dp"
+                android:layout_weight="1.2"
+                android:background="@drawable/input_background"
+                android:hint="Contact No."
+                android:inputType="phone"
+                android:padding="14dp" />
+
+            <EditText
+                android:id="@+id/etDOB"
+                android:layout_width="0dp"
+                android:layout_height="55dp"
+                android:layout_marginStart="10dp"
+                android:layout_weight="0.8"
+                android:background="@drawable/input_background"
+                android:clickable="true"
+                android:focusable="false"
+                android:hint="D.O.B"
+                android:inputType="none"
+                android:padding="14dp" />
+        </LinearLayout>
+        <!-- Select gender with RadioGroup -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="vertical">
+
+            <!-- Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Select Gender"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <!-- RadioGroup for gender options -->
+            <RadioGroup
+                android:id="@+id/rgGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <RadioButton
+                    android:id="@+id/rbMale"
+                    android:layout_width="0dp"
+                    android:layout_height="55dp"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/tt_primary"
+                    android:padding="14dp"
+                    android:text="Male" />
+
+                <RadioButton
+                    android:id="@+id/rbFemale"
+                    android:layout_width="0dp"
+                    android:layout_height="55dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/tt_primary"
+                    android:padding="14dp"
+                    android:text="Female" />
+
+                <RadioButton
+                    android:id="@+id/rbOther"
+                    android:layout_width="0dp"
+                    android:layout_height="55dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/tt_primary"
+                    android:padding="14dp"
+                    android:text="Other" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <!-- Parent Name -->
+        <EditText
+            android:id="@+id/etParentName"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/input_background"
+            android:hint="Parent Name"
+            android:padding="14dp" />
+
+        <!-- Parent Contact No. -->
+        <EditText
+            android:id="@+id/etParentContact"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/input_background"
+            android:hint="Parent’s Contact No."
+            android:inputType="phone"
+            android:padding="14dp" />
+
+        <Spinner
+            android:id="@+id/select_class"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/input_background"
+            android:padding="14dp" />
+
+        <!-- For manual subject input when class = other -->
+        <EditText
+            android:id="@+id/etCustomSubjects"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@drawable/input_background"
+            android:hint="Enter subject Name"
+            android:visibility="gone"
+            android:layout_marginTop="12dp"
+            android:padding="14dp"
+            android:inputType="textCapWords|textMultiLine"/>
+
+
+        <!-- Hide until class is selected -->
+        <LinearLayout
+            android:id="@+id/layoutSubjects"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Subjects"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupSubjects"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="false"
+                app:chipSpacing="8dp"
+                app:singleLine="false"
+                app:selectionRequired="false"
+                android:padding="8dp"/>
+        </LinearLayout>
+
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="0dp"
+                android:layout_height="55dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:backgroundTint="#D3D3D3"
+                android:text="Cancel"
+                android:textColor="@android:color/black" />
+
+            <Button
+                android:id="@+id/btnSubmit"
+                android:layout_width="0dp"
+                android:layout_height="55dp"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:text="Submit"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

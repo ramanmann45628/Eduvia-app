@@ -1,0 +1,525 @@
+package com.example.eduvia;
+
+import static com.example.eduvia.SignIn.PREF_NAME;
+import static com.example.eduvia.SignUp.BASE_URL;
+
+import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+public class AddStudent extends Fragment {
+    EditText etFullName, etEmail, etContact, etDOB, etParentName, etParentContact, etCustomSubjects;
+    LinearLayout layoutSubjects;
+    ChipGroup chipGroupSubjects;
+
+    ImageView imgProfile;
+    Button btnCancel, btnSubmit;
+    String url = BASE_URL + "student.php";
+    RequestQueue queue;
+    RadioButton rbMale, rbFemale, rbOther;
+    RadioGroup rgGender;
+    Spinner etClass;
+    String gender;
+    String subjects = "";
+    private String lastFetchedClass = "";
+    private List<String> preSelectedSubjects = new ArrayList<>();
+
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_add_student, container, false);
+
+        etFullName = view.findViewById(R.id.etFullName);
+        etEmail = view.findViewById(R.id.etEmail);
+        etContact = view.findViewById(R.id.etContact);
+        etDOB = view.findViewById(R.id.etDOB);
+        rgGender = view.findViewById(R.id.rgGender);
+        rbMale = view.findViewById(R.id.rbMale);
+        rbFemale = view.findViewById(R.id.rbFemale);
+        rbOther = view.findViewById(R.id.rbOther);
+        layoutSubjects = view.findViewById(R.id.layoutSubjects);
+        chipGroupSubjects = view.findViewById(R.id.chipGroupSubjects);
+
+
+
+        rgGender.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.rbMale) {
+                gender = "Male";
+            } else if (checkedId == R.id.rbFemale) {
+                gender = "Female";
+            } else if (checkedId == R.id.rbOther) {
+                gender = "Other";
+            }
+        });
+
+        etDOB.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(), (view1, year1, month1, dayOfMonth) -> {
+                etDOB.setText(dayOfMonth + "/" + (month1 + 1) + "/" + year1);
+            }, year, month, day);
+            datePickerDialog.show();
+        });
+
+        etParentName = view.findViewById(R.id.etParentName);
+        etParentContact = view.findViewById(R.id.etParentContact);
+        etClass = view.findViewById(R.id.select_class);
+
+        // Step 1: Prepare class list with hint
+        List<String> classList = new ArrayList<>();
+        classList.add("Select Class"); // <-- hint
+        for (int i = 1; i <= 12; i++) {
+            classList.add("" + i);
+        }
+        classList.add("Other");
+
+        // Step 2: Set adapter spinners
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
+                android.R.layout.simple_spinner_item, classList) {
+            @Override
+            public boolean isEnabled(int position) {
+                return position != 0; // Disable first item (hint)
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView tv = (TextView) view;
+                if (position == 0) {
+                    tv.setTextColor(Color.GRAY); // hint color
+                } else {
+                    tv.setTextColor(Color.BLACK);
+                }
+                return view;
+            }
+        };
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        etClass.setAdapter(adapter);
+
+        // ✅ Listen for class selection
+        etClass.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
+                String selectedClass = etClass.getSelectedItem().toString();
+
+                if (!selectedClass.equals("Select Class")) {
+                    // Avoid multiple same requests
+                    if (!selectedClass.equals(lastFetchedClass)) {
+                        lastFetchedClass = selectedClass;
+                        fetchSubjects(selectedClass);
+                    }
+                } else {
+                    layoutSubjects.setVisibility(View.GONE); // hide subjects if no class selected
+                    chipGroupSubjects.removeAllViews();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(android.widget.AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
+
+        String studentId;
+        if (getArguments() != null) {
+            studentId = getArguments().getString("student_id");
+        } else {
+            studentId = null;
+        }
+
+        etCustomSubjects = view.findViewById(R.id.etCustomSubjects);
+
+        imgProfile = view.findViewById(R.id.imgProfile);
+        btnCancel = view.findViewById(R.id.btnCancel);
+        btnSubmit = view.findViewById(R.id.btnSubmit);
+
+        btnCancel.setOnClickListener(view1 -> {
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.container, new HomeFragment())
+                    .addToBackStack(null)
+                    .commit();
+            BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottomNav);
+            bottomNav.setSelectedItemId(R.id.nav_home);
+        });
+        if (studentId != null) {
+            fetchStudentDetails(studentId);
+        }
+
+        btnSubmit.setOnClickListener(view1 -> {
+            if (studentId != null) {
+                updateStudentDetail(studentId); // if editing
+            } else {
+                saveStudentDetail(); // if adding new
+            }
+        });
+
+        return view;
+    }
+
+    private void updateStudentDetail(String studentId) {
+        SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        String adminId = sp.getString("admin_id", "");
+
+        // ✅ Collect subjects like in saveStudentDetail()
+        if (etCustomSubjects.getVisibility() == View.VISIBLE) {
+            subjects = etCustomSubjects.getText().toString().trim();
+        } else {
+            List<String> selectedSubjects = new ArrayList<>();
+            for (int i = 0; i < chipGroupSubjects.getChildCount(); i++) {
+                Chip chip = (Chip) chipGroupSubjects.getChildAt(i);
+                if (chip.isChecked()) {
+                    selectedSubjects.add(chip.getText().toString());
+                }
+            }
+            subjects = android.text.TextUtils.join(",", selectedSubjects);
+        }
+
+        StringRequest request = new StringRequest(Request.Method.POST, url, response -> {
+            Log.d("ResponseUpdate", response);
+            try {
+                JSONObject obj = new JSONObject(response);
+                if (obj.getBoolean("success")) {
+                    Toast.makeText(getContext(), "Student updated successfully", Toast.LENGTH_SHORT).show();
+                    requireActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.container, new HomeFragment())
+                            .commit();
+                } else {
+                    Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }, error -> {
+            Log.e("VolleyError", error.toString());
+        }) {
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("action", "update_student");
+                params.put("admin_id", adminId);
+                params.put("student_id", studentId);
+                params.put("full_name", etFullName.getText().toString().trim());
+                params.put("email", etEmail.getText().toString().trim());
+                params.put("contact", etContact.getText().toString().trim());
+                params.put("dob", etDOB.getText().toString().trim());
+                params.put("gender", gender);
+                params.put("parent_name", etParentName.getText().toString().trim());
+                params.put("parent_contact", etParentContact.getText().toString().trim());
+                params.put("class", etClass.getSelectedItem().toString());
+                params.put("subjects", subjects); // ✅ Now correctly filled
+                return params;
+            }
+        };
+
+        if (queue == null) {
+            queue = Volley.newRequestQueue(requireContext());
+        }
+        queue.add(request);
+    }
+
+
+    private void fetchStudentDetails(String studentId) {
+        SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        String adminId = sp.getString("admin_id", "");
+
+        StringRequest request = new StringRequest(Request.Method.POST, url, response -> {
+            try {
+                Log.d("ResponseGetStudent", response);
+                JSONObject obj = new JSONObject(response);
+                if (obj.getBoolean("success")) {
+                    JSONObject student = obj.getJSONObject("student");
+
+                    // Prefill fields
+                    etFullName.setText(student.getString("name"));
+                    etEmail.setText(student.getString("email"));
+                    etContact.setText(student.getString("phone"));
+                    etDOB.setText(student.getString("dob"));
+                    etParentName.setText(student.getString("parent_name"));
+                    etParentContact.setText(student.getString("parent_phone"));
+
+                    // Gender
+                    String genderVal = student.getString("gender");
+                    if (genderVal.equalsIgnoreCase("Male")) rbMale.setChecked(true);
+                    else if (genderVal.equalsIgnoreCase("Female")) rbFemale.setChecked(true);
+                    else rbOther.setChecked(true);
+
+                    // Class
+                    String classVal = student.getString("class");
+                    for (int i = 0; i < etClass.getCount(); i++) {
+                        if (etClass.getItemAtPosition(i).toString().equals(classVal)) {
+                            etClass.setSelection(i);
+                            break;
+                        }
+                    }
+
+                    // Subjects (comma separated)
+                    String subjectStr = student.getString("subjects");
+                    preSelectedSubjects.clear();
+                    if (subjectStr != null && !subjectStr.isEmpty()) {
+                        String[] subjectArr = subjectStr.split(",");
+                        for (String s : subjectArr) {
+                            preSelectedSubjects.add(s.trim());
+                        }
+                    }
+
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }, error -> {
+            Log.e("VolleyError", error.toString());
+        }) {
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("action", "get_student_details");
+                params.put("student_id", studentId);
+                params.put("admin_id", adminId);
+                Log.d("param", "POST Params: " + params);
+                return params;
+            }
+        };
+
+        if (queue == null) {
+            queue = Volley.newRequestQueue(requireContext());
+        }
+        queue.add(request);
+    }
+
+    private void saveStudentDetail() {
+        String fullName = etFullName.getText().toString().trim();
+        String email = etEmail.getText().toString().trim();
+        String contact = etContact.getText().toString().trim();
+        String dob = etDOB.getText().toString().trim();
+        String parentName = etParentName.getText().toString().trim();
+        String parentContact = etParentContact.getText().toString().trim();
+
+        // Validation
+        if (fullName.isEmpty()) {
+            etFullName.setError("Full name is required");
+            etFullName.requestFocus();
+            return;
+        }
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            etEmail.setError("Enter a valid email");
+            etEmail.requestFocus();
+            return;
+        }
+        if (contact.isEmpty() || contact.length() < 10) {
+            etContact.setError("Enter a valid contact number");
+            etContact.requestFocus();
+            return;
+        }
+        if (dob.isEmpty()) {
+            etDOB.setError("Select Date of Birth");
+            etDOB.requestFocus();
+            return;
+        }
+        if (parentName.isEmpty()) {
+            etParentName.setError("Parent name is required");
+            etParentName.requestFocus();
+            return;
+        }
+        if (parentContact.isEmpty() || parentContact.length() < 10) {
+            etParentContact.setError("Enter valid parent contact");
+            etParentContact.requestFocus();
+            return;
+        }
+
+        if (etClass.equals("Select Class")) {
+            Toast.makeText(getContext(), "Please select class", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (etCustomSubjects.getVisibility() == View.VISIBLE) {
+            //  Take from custom input
+            subjects = etCustomSubjects.getText().toString().trim();
+        } else {
+            //  Take from chip selections
+            List<String> selectedSubjects = new ArrayList<>();
+            for (int i = 0; i < chipGroupSubjects.getChildCount(); i++) {
+                Chip chip = (Chip) chipGroupSubjects.getChildAt(i);
+                if (chip.isChecked()) {
+                    selectedSubjects.add(chip.getText().toString());
+                }
+            }
+            subjects = android.text.TextUtils.join(",", selectedSubjects);
+        }
+
+        if (subjects.isEmpty()) {
+            Toast.makeText(getContext(), "Enter or select at least one subject", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (gender == null) {
+            Toast.makeText(getContext(), "Select Gender", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // If all validations pass, then send request
+        StringRequest request = new StringRequest(Request.Method.POST, url, response -> {
+            Log.d("ResponseAdd", response);
+            JSONObject obj = null;
+            try {
+                obj = new JSONObject(response);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                if (obj.getBoolean("success")) {
+                    Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                    requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
+                }
+                if (!obj.getBoolean("success")) {
+                    Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }, volleyError -> {
+            Log.e("VolleyError", volleyError.toString());
+
+        }) {
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("action", "add_student");
+
+                SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+                String adminId = sp.getString("admin_id", "");
+                params.put("admin_id", adminId);
+                params.put("gender", gender);
+                params.put("full_name", fullName);
+                params.put("email", email);
+                params.put("contact", contact);
+                params.put("dob", dob);
+                params.put("parent_name", parentName);
+                params.put("parent_contact", parentContact);
+                params.put("subjects", subjects);
+                params.put("class", etClass.getSelectedItem().toString());
+
+                Log.d("param", "POST Params: " + params);
+                return params;
+            }
+        };
+        if (queue == null) {
+            queue = Volley.newRequestQueue(requireContext());
+        }
+        queue.add(request);
+    }
+
+    private void fetchSubjects(String studentClass) {
+        SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        String adminId = sp.getString("admin_id", "");
+
+        StringRequest request = new StringRequest(Request.Method.POST, url, response -> {
+            try {
+                JSONObject obj = new JSONObject(response);
+                if (obj.getBoolean("success")) {
+                    JSONArray arr = obj.getJSONArray("subjects");
+
+                    // Clear old chips
+                    chipGroupSubjects.removeAllViews();
+
+                    for (int i = 0; i < arr.length(); i++) {
+                        String subject = arr.getString(i);
+
+                        Chip chip = new Chip(requireContext());
+                        chip.setText(subject);
+                        chip.setChipBackgroundColorResource(R.color.tt_chip);
+                        chip.setTextColor(Color.BLACK);
+                        chip.setChipStrokeWidth(1f);
+                        chip.setChipStrokeColorResource(R.color.tt_primary);
+                        chip.setChipCornerRadius(25f);
+                        chip.setCheckable(true);
+                        chip.setClickable(true);
+
+                        // ✅ Pre-select if it was previously selected
+                        if (preSelectedSubjects.contains(subject)) {
+                            chip.setChecked(true);
+                        }
+
+                        chipGroupSubjects.addView(chip);
+                    }
+
+
+                    // ✅ Show subjects layout
+                    layoutSubjects.setVisibility(View.VISIBLE);
+
+                } else {
+                    Toast.makeText(getContext(), "No subjects found", Toast.LENGTH_SHORT).show();
+                    layoutSubjects.setVisibility(View.GONE);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }, error -> {
+            Log.e("VolleyError", error.toString());
+        }) {
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("action", "get_subjects");
+                params.put("admin_id", adminId);
+                params.put("class", studentClass);
+                return params;
+            }
+        };
+
+        if (queue == null) {
+            queue = Volley.newRequestQueue(requireContext());
+        }
+        queue.add(request);
+    }
+}
