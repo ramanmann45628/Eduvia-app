@@ -72,6 +72,15 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.VH> {
     public interface OnItemClick {
         void onClick(Student s);
     }
+    public void clear() {
+        data.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addStudent(Student student) {
+        data.add(student);
+        notifyDataSetChanged();
+    }
 
     static class VH extends RecyclerView.ViewHolder {
         TextView tvName, tvSubjects, tvClass, tvFeeAndDate,active_status;
