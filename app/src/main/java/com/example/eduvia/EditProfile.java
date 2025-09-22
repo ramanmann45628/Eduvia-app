@@ -39,7 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EditProfile extends Fragment {
-    private static final int PICK_IMAGE = 1;
+    public static final int PICK_IMAGE = 1;
 
     EditText full_name, email, phone, role;
     Bitmap bitmap;
@@ -49,7 +49,7 @@ public class EditProfile extends Fragment {
 
     String url = BASE_URL + "admin_profile.php";
 
-    String originalName, originalPhone, originalRole; // store fetched values
+    String originalName, originalPhone, originalRole;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -302,7 +302,7 @@ public class EditProfile extends Fragment {
             try {
                 InputStream inputStream = requireContext().getContentResolver().openInputStream(imageUri);
                 bitmap = BitmapFactory.decodeStream(inputStream);
-                profile_image.setImageBitmap(bitmap); // ✅ Preview selected image
+                profile_image.setImageBitmap(bitmap); // Preview selected image
             } catch (Exception e) {
                 e.printStackTrace();
             }

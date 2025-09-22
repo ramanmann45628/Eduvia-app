@@ -1,7 +1,10 @@
 package com.example.eduvia;
 
+import static com.example.eduvia.SignUp.BASE_URL;
+
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -40,7 +46,25 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.VH> {
     @Override
     public void onBindViewHolder(@NonNull VH h, int position) {
         Student s = data.get(position);
-        h.tvName.setText(s.getName());
+        String name = s.getName();
+        // Capitalize each word
+        String[] words = name.split(" ");
+        String capitalizedName = "";
+        for (String word : words) {
+            capitalizedName += word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase() + " ";
+        }
+        h.tvName.setText(capitalizedName);
+        String avatar = s.getAvatar();
+        String avatarUrl = BASE_URL + avatar;
+        Log.d("avatarUrl", avatarUrl);
+        // set profile image using glide
+        if (s.getAvatar() != null) {
+            Glide.with(h.itemView.getContext())
+                    .load(avatarUrl)
+                    .placeholder(R.drawable.user_profile)
+                    .error(R.drawable.user_profile)
+                    .into(h.avatar);
+        }
         h.tvSubjects.setText(s.getSubjects());
         //
         h.tvClass.setText(String.format(Locale.getDefault(), "Class %s", s.getClassName()));
@@ -56,6 +80,8 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.VH> {
                     h.itemView.getResources().getColor(R.color.tt_danger)
             ));
         }
+
+
 
 
         h.tvFeeAndDate.setTextColor(s.getStatus().equals("Paid") ? h.itemView.getResources().getColor(R.color.tt_success) : h.itemView.getResources().getColor(R.color.tt_danger));

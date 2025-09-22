@@ -290,6 +290,15 @@ public class Announcement extends Fragment {
 
                     if (response.equals("success")) {
                         Toast.makeText(getContext(), "Announcement created successfully", Toast.LENGTH_SHORT).show();
+                        etClass.setSelection(0);
+                        etTitle.setText("");
+                        etMessage.setText("");
+                        etStartDate.setText("");
+                        etExpiryDate.setText("");
+                        etStartTime.setText("");
+                        etExpiryTime.setText("");
+                        rgSendTo.clearCheck();
+                        etClass.setVisibility(View.GONE);
                         // Go back to home fragment
                         requireActivity().getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.container, new HomeFragment())

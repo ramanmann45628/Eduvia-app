@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import org.json.JSONArray;
@@ -35,7 +37,7 @@ public class StudentDetails extends Fragment {
     private TextView tvName, tvEmail, tvClass, tvPhone, tvDob, tvFeeStatus,
             tvStatususer, tvSubjects, tvGender, tvParentName,
             tvParentContact, tvRegDate, tv_total_fee,tvEdit;
-
+    ImageView imgProfile;
     private Button btnBack, btnDelete;
     private SwitchMaterial switchStatus;
 
@@ -63,6 +65,8 @@ public class StudentDetails extends Fragment {
         tv_total_fee = view.findViewById(R.id.tv_total_fee);
         tvStatususer = view.findViewById(R.id.tvStatususer);
         tvEdit = view.findViewById(R.id.tvEdit);
+        imgProfile = view.findViewById(R.id.imgProfile);
+
         tvEdit.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             bundle.putString("student_id", stId);
@@ -186,10 +190,6 @@ public class StudentDetails extends Fragment {
 
         Volley.newRequestQueue(requireContext()).add(request);
     }
-
-    /**
-     * Fetch Student Details
-     */
     private void fetchStudentsFromServer(String studentId) {
         SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String adminId = sp.getString("admin_id", "");
@@ -198,6 +198,7 @@ public class StudentDetails extends Fragment {
 
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 response -> {
+            Log.d("response", response);
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (jsonObject.getBoolean("success")) {
@@ -216,6 +217,21 @@ public class StudentDetails extends Fragment {
                             String parentContact = sobj.getString("parent_phone");
                             String regDate = sobj.getString("created_at");
                             int statusInt = sobj.getInt("status");
+
+                            // Profile image
+                            if (sobj.has("profile_img") && !sobj.isNull("profile_img")) {
+                                String profileImgUrl = sobj.getString("profile_img");
+                                Log.d("ProfileImageURL", profileImgUrl);
+                                String fullUrl = BASE_URL + profileImgUrl;
+                                if (!profileImgUrl.isEmpty()) {
+                                    Glide.with(requireContext())
+                                            .load(fullUrl)
+                                            .placeholder(R.drawable.user_profile)  // default
+                                            .error(R.drawable.ic_launcher_foreground)        // fallback
+                                            .into(imgProfile);
+                                }
+                            }
+
 
                             // Set UI
                             tvName.setText(name);
