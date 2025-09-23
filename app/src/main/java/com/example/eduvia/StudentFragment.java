@@ -137,7 +137,6 @@ public class StudentFragment extends Fragment {
                                         obj.optString("profile_img","user_profile"),
                                         displaySubj,
                                         obj.getString("class"),
-                                        obj.optString("fee_status", "Unknown"),
                                         status
                                 );
 

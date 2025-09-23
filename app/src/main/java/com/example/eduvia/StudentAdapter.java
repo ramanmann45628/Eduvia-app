@@ -68,7 +68,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.VH> {
         h.tvSubjects.setText(s.getSubjects());
         //
         h.tvClass.setText(String.format(Locale.getDefault(), "Class %s", s.getClassName()));
-        h.tvFeeAndDate.setText(s.getStatus());
+
         if (s.getActiveStaus() == 1) {
             h.active_status.setText("Active");
             h.active_status.setBackgroundTintList(ColorStateList.valueOf(
@@ -81,10 +81,6 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.VH> {
             ));
         }
 
-
-
-
-        h.tvFeeAndDate.setTextColor(s.getStatus().equals("Paid") ? h.itemView.getResources().getColor(R.color.tt_success) : h.itemView.getResources().getColor(R.color.tt_danger));
         h.itemView.setOnClickListener(v -> {
             if (onItemClick != null) onItemClick.onClick(s);
         });
@@ -109,7 +105,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.VH> {
     }
 
     static class VH extends RecyclerView.ViewHolder {
-        TextView tvName, tvSubjects, tvClass, tvFeeAndDate,active_status;
+        TextView tvName, tvSubjects, tvClass,active_status;
         ImageView avatar;
 
         VH(@NonNull View itemView) {
@@ -118,7 +114,6 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.VH> {
             tvName = itemView.findViewById(R.id.tvName);
             tvSubjects = itemView.findViewById(R.id.tvSubjects);
             tvClass = itemView.findViewById(R.id.tvClass);
-            tvFeeAndDate = itemView.findViewById(R.id.tvFeeState);
             active_status = itemView.findViewById(R.id.active_status);
 
         }
