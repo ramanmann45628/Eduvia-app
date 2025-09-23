@@ -33,9 +33,9 @@ import java.util.Map;
 
 public class Profile extends Fragment {
     String url = BASE_URL + "fetchData.php";
-    TextView edit_profile, total_subjects, total_students, announcement, fee_view, change_password, logout_btn,role;
+    TextView edit_profile, total_subjects, total_students, announcement, fee_view, change_password, logout_btn, role;
     LinearLayout subject_view, student_view;
-     ImageView profileImage;
+    ImageView profileImage;
 
 
     @Override
@@ -56,6 +56,13 @@ public class Profile extends Fragment {
         SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String savedRole = sp.getString("role", "");
         role.setText(savedRole);
+
+        fee_view.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, new FeesFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
 
         edit_profile.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager().beginTransaction()
