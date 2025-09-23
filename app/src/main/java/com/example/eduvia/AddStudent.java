@@ -1,15 +1,22 @@
 package com.example.eduvia;
 
+import static android.content.Context.MODE_PRIVATE;
+import static com.example.eduvia.EditProfile.PICK_IMAGE;
 import static com.example.eduvia.SignIn.PREF_NAME;
 import static com.example.eduvia.SignUp.BASE_URL;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +39,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -40,6 +48,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -51,9 +61,9 @@ public class AddStudent extends Fragment {
     EditText etFullName, etEmail, etContact, etDOB, etParentName, etParentContact, etCustomSubjects;
     LinearLayout layoutSubjects;
     ChipGroup chipGroupSubjects;
-
+    Bitmap selectedProfileBitmap;
     ImageView imgProfile;
-    Button btnCancel, btnSubmit;
+    Button btnCancel, btnSubmit,uploadImage;
     String url = BASE_URL + "student.php";
     RequestQueue queue;
     RadioButton rbMale, rbFemale, rbOther;
@@ -62,6 +72,7 @@ public class AddStudent extends Fragment {
     String gender;
     String subjects = "";
     private String lastFetchedClass = "";
+    SharedPreferences sp;
     private List<String> preSelectedSubjects = new ArrayList<>();
 
 
@@ -82,6 +93,13 @@ public class AddStudent extends Fragment {
         rbOther = view.findViewById(R.id.rbOther);
         layoutSubjects = view.findViewById(R.id.layoutSubjects);
         chipGroupSubjects = view.findViewById(R.id.chipGroupSubjects);
+        uploadImage =  view.findViewById(R.id.btnChangeImage);
+
+        uploadImage.setOnClickListener(view1 -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, PICK_IMAGE);
+        });
+
 
 
 
@@ -205,10 +223,10 @@ public class AddStudent extends Fragment {
     }
 
     private void updateStudentDetail(String studentId) {
-        SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String adminId = sp.getString("admin_id", "");
 
-        // ✅ Collect subjects like in saveStudentDetail()
+        // Collect subjects like in saveStudentDetail()
         if (etCustomSubjects.getVisibility() == View.VISIBLE) {
             subjects = etCustomSubjects.getText().toString().trim();
         } else {
@@ -255,9 +273,18 @@ public class AddStudent extends Fragment {
                 params.put("parent_name", etParentName.getText().toString().trim());
                 params.put("parent_contact", etParentContact.getText().toString().trim());
                 params.put("class", etClass.getSelectedItem().toString());
-                params.put("subjects", subjects); // ✅ Now correctly filled
+                params.put("subjects", subjects);
+
+
+                if (selectedProfileBitmap != null) {
+                    params.put("image", encodeImageToBase64(selectedProfileBitmap));
+                } else {
+                    params.put("image", "");
+                }
+
                 return params;
             }
+
         };
 
         if (queue == null) {
@@ -268,7 +295,7 @@ public class AddStudent extends Fragment {
 
 
     private void fetchStudentDetails(String studentId) {
-        SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String adminId = sp.getString("admin_id", "");
 
         StringRequest request = new StringRequest(Request.Method.POST, url, response -> {
@@ -448,9 +475,16 @@ public class AddStudent extends Fragment {
                 params.put("subjects", subjects);
                 params.put("class", etClass.getSelectedItem().toString());
 
+                // ✅ add encoded image
+                if (selectedProfileBitmap != null) {
+                    params.put("image", encodeImageToBase64(selectedProfileBitmap));
+                } else {
+                    params.put("image", ""); // empty if not selected
+                }
+
                 Log.d("param", "POST Params: " + params);
                 return params;
-            }
+        }
         };
         if (queue == null) {
             queue = Volley.newRequestQueue(requireContext());
@@ -522,4 +556,40 @@ public class AddStudent extends Fragment {
         }
         queue.add(request);
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE && resultCode == getActivity().RESULT_OK && data != null) {
+            try {
+                Uri imageUri = data.getData();
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), imageUri);
+
+                int width = bitmap.getWidth();
+                int height = bitmap.getHeight();
+                int newSize = Math.min(width, height);
+
+                int xOffset = (width - newSize) / 2;
+                int yOffset = (height - newSize) / 2;
+
+                Bitmap squareBitmap = Bitmap.createBitmap(bitmap, xOffset, yOffset, newSize, newSize);
+
+                selectedProfileBitmap = squareBitmap; // save for upload
+                imgProfile.setImageBitmap(squareBitmap); // preview
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private String encodeImageToBase64(Bitmap bitmap) {
+        if (bitmap == null) return "";
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
+        byte[] imageBytes = baos.toByteArray();
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+    }
+
 }

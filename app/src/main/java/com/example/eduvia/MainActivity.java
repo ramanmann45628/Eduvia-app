@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     private void fetchDetails(String adminId) {
         StringRequest sr = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    Log.d(TAG, "Response: " + response);
+                    Log.d(TAG, "ProfileResponse: " + response);
                     try {
                         JSONObject json = new JSONObject(response);
                         if (json.getBoolean("success")) {
