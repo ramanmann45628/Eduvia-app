@@ -148,7 +148,7 @@
                     android:id="@+id/tvTotalFees"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="50,000"
+                    android:text="00,000"
                     android:textStyle="bold"
                     android:textColor="#1EE5E2"
                     android:textSize="16sp" />
@@ -178,7 +178,7 @@
                     android:id="@+id/tvPendingFees"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="25,000"
+                    android:text="00,000"
                     android:textStyle="bold"
                     android:textColor="#E53935"
                     android:textSize="16sp" />
@@ -208,7 +208,7 @@
                     android:id="@+id/tvReceivedFees"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="10,000"
+                    android:text="00,000"
                     android:textStyle="bold"
                     android:textColor="#43A047"
                     android:textSize="16sp" />

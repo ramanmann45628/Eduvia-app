@@ -45,7 +45,7 @@ public class OTP extends AppCompatActivity {
         et3 = findViewById(R.id.etOtp3);
         et4 = findViewById(R.id.etOtp4);
         btnVerifyOtp = findViewById(R.id.btnVerifyOtp);
-        tvResendOtp = findViewById(R.id.tvResendOtp); // ✅ moved inside onCreate
+        tvResendOtp = findViewById(R.id.tvResendOtp); // moved inside onCreate
 
         queue = Volley.newRequestQueue(this);
         progressDialog = new ProgressDialog(this);

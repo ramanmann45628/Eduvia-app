@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 },
-                error -> Log.e(TAG, "Volley Error: " + error.getMessage())) {
+                error -> Log.e(TAG, "Volley Error showing here: " + error.getMessage())) {
 
             @Override
             protected Map<String, String> getParams() {
