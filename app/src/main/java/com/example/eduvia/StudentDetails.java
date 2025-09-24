@@ -206,6 +206,15 @@ public class StudentDetails extends Fragment {
 
                             // Extract details
                             String name = sobj.getString("name");
+                            // Capitalize the name of each word
+                            String[] names = name.split(" ");
+                            String capitalizeName = "";
+                            for (String s : names) {
+                                String first = s.substring(0, 1);
+                                String afterfirst = s.substring(1);
+                                capitalizeName += first.toUpperCase() + afterfirst + " ";
+                            }
+
                             String email = sobj.getString("email");
                             String gender = sobj.getString("gender");
                             String phone = sobj.getString("phone");
@@ -234,7 +243,7 @@ public class StudentDetails extends Fragment {
 
 
                             // Set UI
-                            tvName.setText(name);
+                            tvName.setText(capitalizeName);
                             tvEmail.setText(email);
                             tvGender.setText(gender);
                             tvClass.setText(clas);

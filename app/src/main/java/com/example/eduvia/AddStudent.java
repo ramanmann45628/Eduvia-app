@@ -518,7 +518,7 @@ public class AddStudent extends Fragment {
                         chip.setCheckable(true);
                         chip.setClickable(true);
 
-                        // ✅ Pre-select if it was previously selected
+                        // Pre-select if it was previously selected
                         if (preSelectedSubjects.contains(subject)) {
                             chip.setChecked(true);
                         }
@@ -527,7 +527,7 @@ public class AddStudent extends Fragment {
                     }
 
 
-                    // ✅ Show subjects layout
+                    //Show subjects layout
                     layoutSubjects.setVisibility(View.VISIBLE);
 
                 } else {

@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
@@ -25,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SignUp extends AppCompatActivity {
-    public static final String BASE_URL = "http://10.0.2.2/tuition_centre/";
+    public static final String BASE_URL = "https://eduvia.org.in/";
     private static final String TAG = "RegisterActivity";
     TextView login, showMessage;
     EditText etName, etEmail, etPassword, etConfirmPassword;
@@ -147,11 +148,11 @@ public class SignUp extends AppCompatActivity {
                 }
             };
 
-//            request.setRetryPolicy(new DefaultRetryPolicy(
-//                    15000,
-//                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-//                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-//            ));
+            request.setRetryPolicy(new DefaultRetryPolicy(
+                    15000,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+            ));
 
             Volley.newRequestQueue(SignUp.this).add(request);
         });

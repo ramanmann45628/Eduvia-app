@@ -116,6 +116,51 @@
             android:layout_marginVertical="10dp"
             android:background="#DDDDDD" />
 
+        <!-- Attendance Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Attendance"
+                android:textColor="#313131"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/mark_attendance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mark Attendance"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Consistency is the key to success — mark attendance daily."
+                android:textColor="#777"
+                android:textSize="16sp"
+                android:gravity="start"
+                android:textStyle="italic" />
+        </LinearLayout>        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="10dp"
+            android:background="#DDDDDD" />
+
         <!-- Announcement Header -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -229,7 +274,7 @@
                     android:id="@+id/total_students"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="36"
+                    android:text="No student found"
                     android:textColor="#808080"
                     android:textSize="14sp" />
             </LinearLayout>

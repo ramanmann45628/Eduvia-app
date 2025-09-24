@@ -9,21 +9,19 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.DrawableRes;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -51,11 +49,10 @@ import java.util.Set;
 public class HomeFragment extends Fragment {
 
     String url = BASE_URL + "subject.php";
-    TextView user_name, addSubject,tvNoAnnouncements, add_student, role, add_announcement, total_students;
+    TextView user_name, addSubject, tvNoAnnouncements, add_student, role, add_announcement, total_students, mark_attendance;
     EditText etSubjectName, etfees;
     Spinner sp_class_from, sp_class_to;
     ChipGroup chipGroup;
-    ImageView our_profile;
     RecyclerView rvAnnouncements;
     SharedPreferences sp;
     AnnouncementAdapter announcementAdapter;
@@ -75,6 +72,76 @@ public class HomeFragment extends Fragment {
         total_students = view.findViewById(R.id.total_students);
         tvNoAnnouncements = view.findViewById(R.id.tvNoAnnouncements);
         student_view = view.findViewById(R.id.student_view);
+        mark_attendance = view.findViewById(R.id.mark_attendance);
+
+        mark_attendance.setOnClickListener(v -> {
+            // Inflate dialog layout
+            View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_select_class, null);
+            Spinner spinnerClass = dialogView.findViewById(R.id.spinnerClass);
+            Button btnProceed = dialogView.findViewById(R.id.btnProceed);
+
+            // Step 1: Prepare class list
+            List<String> classList = new ArrayList<>();
+            classList.add("Select Class");
+            for (int i = 1; i <= 12; i++) {
+                classList.add(String.valueOf(i));
+            }
+            classList.add("Other");
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
+                    android.R.layout.simple_spinner_item, classList) {
+
+                @Override
+                public boolean isEnabled(int position) {
+                    return position != 0;
+                }
+
+                @Override
+                public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                    View view = super.getDropDownView(position, convertView, parent);
+                    TextView tv = (TextView) view;
+                    if (position == 0) {
+                        // Gray color for hint
+                        tv.setTextColor(Color.GRAY);
+                    } else {
+                        tv.setTextColor(Color.BLACK);
+                    }
+                    return view;
+                }
+            };
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerClass.setAdapter(adapter);
+
+
+            // Create dialog
+            AlertDialog dialog = new AlertDialog.Builder(getContext())
+                    .setView(dialogView)
+                    .create();
+
+            // Step 3: Handle Proceed click
+            btnProceed.setOnClickListener(v1 -> {
+                String selectedClass = spinnerClass.getSelectedItem().toString();
+
+                // Send data to AttendanceView fragment
+                Bundle bundle = new Bundle();
+                bundle.putString("selectedClass", selectedClass);
+
+                AttendanceView attendanceFragment = new AttendanceView();
+                attendanceFragment.setArguments(bundle);
+
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.container, attendanceFragment)
+                        .addToBackStack(null)
+                        .commit();
+                dialog.dismiss();
+            });
+
+            // Show dialog
+            dialog.show();
+        });
+
+
 
         student_view.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager()
@@ -95,7 +162,6 @@ public class HomeFragment extends Fragment {
         role.setText(savedRole);
 
         fetchTotal();
-
 
 
         add_student.setOnClickListener(view1 -> {
@@ -368,6 +434,7 @@ public class HomeFragment extends Fragment {
         };
         Volley.newRequestQueue(getContext()).add(sr);
     }
+
     private void fetchTotal() {
         String url = BASE_URL + "fetchData.php";
         SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
@@ -406,6 +473,7 @@ public class HomeFragment extends Fragment {
 
         Volley.newRequestQueue(requireContext()).add(sr);
     }
+
     private void fetchAnnouncements() {
         String annUrl = BASE_URL + "announcement.php";
 
@@ -477,7 +545,9 @@ public class HomeFragment extends Fragment {
                         } else {
                             Toast.makeText(getContext(), "Delete failed", Toast.LENGTH_SHORT).show();
                         }
-                    } catch (Exception e) { e.printStackTrace(); }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 },
                 error -> Toast.makeText(getContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show()
         ) {
