@@ -57,6 +57,9 @@ public class HomeFragment extends Fragment {
     SharedPreferences sp;
     AnnouncementAdapter announcementAdapter;
     LinearLayout student_view;
+
+
+
     List<AnnouncementModel> annList = new ArrayList<>();
 
     @Override
@@ -73,6 +76,7 @@ public class HomeFragment extends Fragment {
         tvNoAnnouncements = view.findViewById(R.id.tvNoAnnouncements);
         student_view = view.findViewById(R.id.student_view);
         mark_attendance = view.findViewById(R.id.mark_attendance);
+
 
         mark_attendance.setOnClickListener(v -> {
             // Inflate dialog layout
@@ -120,27 +124,29 @@ public class HomeFragment extends Fragment {
 
             // Step 3: Handle Proceed click
             btnProceed.setOnClickListener(v1 -> {
+                int selectedPosition = spinnerClass.getSelectedItemPosition();
                 String selectedClass = spinnerClass.getSelectedItem().toString();
 
-                // Send data to AttendanceView fragment
-                Bundle bundle = new Bundle();
-                bundle.putString("selectedClass", selectedClass);
+                if (selectedPosition == 0) {
+                    Toast.makeText(getContext(), "⚠ Please select a class", Toast.LENGTH_SHORT).show();
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("selectedClass", selectedClass);
 
-                AttendanceView attendanceFragment = new AttendanceView();
-                attendanceFragment.setArguments(bundle);
+                    AttendanceView attendanceFragment = new AttendanceView();
+                    attendanceFragment.setArguments(bundle);
 
-                requireActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.container, attendanceFragment)
-                        .addToBackStack(null)
-                        .commit();
-                dialog.dismiss();
+                    requireActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.container, attendanceFragment)
+                            .addToBackStack(null)
+                            .commit();
+                    dialog.dismiss();
+                }
             });
 
-            // Show dialog
             dialog.show();
         });
-
 
 
         student_view.setOnClickListener(v -> {

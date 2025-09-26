@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class Splash_Screen extends AppCompatActivity {
 
-    private static final int SPLASH_TIME_OUT = 2000; // 2 seconds
+    private static final int SPLASH_TIME_OUT = 2000;
     ImageView splashLogo;
 
     public boolean isInternetAvailable(Context context) {
@@ -36,7 +36,7 @@ public class Splash_Screen extends AppCompatActivity {
             // Show dialog and close app
             new AlertDialog.Builder(this)
                     .setTitle("No Internet Connection")
-                    .setMessage("Please connect to the internet to use this app.")
+                    .setMessage("Please connect to the internet to use Eduvia app.")
                     .setCancelable(false)
                     .setPositiveButton("Exit", (dialog, which) -> finish())
                     .show();

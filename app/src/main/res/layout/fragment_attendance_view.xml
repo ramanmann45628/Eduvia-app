@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F7FA"
     tools:context=".AttendanceView">
 
     <!-- Header -->
@@ -19,117 +18,135 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Attendance Sheet"
+            android:textColor="#000000"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#000000" />
+            android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/btnCalendar"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_calander"
-            app:tint="@color/tt_primary" />
     </LinearLayout>
 
-    <HorizontalScrollView
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/dateTabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="none"
-        android:overScrollMode="never"
-        android:background="@drawable/alert_round_corner"
-        android:padding="1dp">
-
-        <LinearLayout
-            android:id="@+id/dateContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:dividerPadding="4dp"
-            android:showDividers="middle"/>
-    </HorizontalScrollView>
+        android:layout_marginTop="10dp"
+        android:background="@drawable/input_background"
+        app:tabBackground="@drawable/selector_date_button"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/tt_primary"
+        app:tabIndicatorHeight="0dp"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="#fff"
+        app:tabTextColor="@color/tt_text" />
 
 
-    <!-- Class Info -->
+
+    <!-- Class Info + Legend in one horizontal row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_marginTop="14dp"
         android:background="#fff"
-        android:padding="16dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Class : 6th"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#000000" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Total Students : 24"
-            android:textSize="14sp"
-            android:textColor="#666666"
-            android:layout_marginTop="4dp"/>
-    </LinearLayout>
-
-    <!-- Legend -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:background="#fff"
-        android:paddingHorizontal="16dp"
-        android:paddingBottom="8dp">
+        android:padding="0dp">
 
+        <!-- Left side: Class info -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginEnd="16dp">
-
-            <View
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginEnd="4dp"
-                android:background="@drawable/circle_red"/>
-
+            android:layout_gravity="start"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tvClass"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Absent"
-                android:textSize="14sp"
-                android:textColor="#000000"/>
+                android:text="Class : 0th"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvTotalStudents"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Total Students : 0"
+                android:textColor="#666666"
+                android:textSize="14sp" />
         </LinearLayout>
 
+        <!-- Right side: Legend -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_gravity="end|center_vertical"
+            android:gravity="end"
+            android:orientation="vertical">
 
-            <View
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginEnd="4dp"
-                android:background="@drawable/circle_green"/>
-
-            <TextView
+            <!-- Absent -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Present"
-                android:textSize="14sp"
-                android:textColor="#000000"/>
+                android:gravity="end"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:text="Absent"
+                    android:textColor="#000000"
+                    android:textSize="12sp" />
+
+                <View
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginEnd="4dp"
+                    android:background="@drawable/circle_red" />
+
+            </LinearLayout>
+
+            <!-- Present -->
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:text="Present"
+                    android:textColor="#000000"
+                    android:textSize="12sp" />
+
+                <View
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginEnd="4dp"
+                    android:background="@drawable/circle_green" />
+
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="#DDDDDD" />
+
+
+    
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerAttendance"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="8dp"/>
-    <!-- RecyclerView for Students -->
+        android:layout_weight="1" />
 
 </LinearLayout>
