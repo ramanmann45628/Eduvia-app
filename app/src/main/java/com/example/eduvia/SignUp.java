@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 
+import com.android.volley.BuildConfig;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
@@ -25,9 +26,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SignUp extends AppCompatActivity {
-    public static final String BASE_URL = "http://10.0.2.2/tuition_centre/";
-//    public static final String BASE_URL = "https://eduvia.org.in/";
-    private static final String TAG = "RegisterActivity";
+//    public static final String BASE_URL = "http://10.0.2.2/tuition_centre/";
+    public static final String BASE_URL = "https://eduvia.org.in/";
+
     TextView login, showMessage;
     EditText etName, etEmail, etPassword, etConfirmPassword;
     Button register, btnVerifyEmail;
@@ -132,7 +133,6 @@ public class SignUp extends AppCompatActivity {
 
                     },
                     error -> {
-                        Log.e(TAG, "Network Error", error);
                         Toast.makeText(SignUp.this, "Network Error: " + error.toString(), Toast.LENGTH_SHORT).show();
                     }) {
                 @Override
@@ -142,7 +142,6 @@ public class SignUp extends AppCompatActivity {
                     params.put("name", name);
                     params.put("email", email);
                     params.put("password", password);
-                    Log.d(TAG, "POST Params: " + params);
                     return params;
                 }
             };

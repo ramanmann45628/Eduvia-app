@@ -47,7 +47,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class HomeFragment extends Fragment {
-
+    Loader loader;
     String url = BASE_URL + "subject.php";
     TextView user_name, addSubject, tvNoAnnouncements, add_student, role, add_announcement, total_students, mark_attendance;
     EditText etSubjectName, etfees;
@@ -59,14 +59,13 @@ public class HomeFragment extends Fragment {
     LinearLayout student_view;
 
 
-
     List<AnnouncementModel> annList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
+        loader = new Loader(getContext());
         user_name = view.findViewById(R.id.user_name);
         addSubject = view.findViewById(R.id.add_subject);
         chipGroup = view.findViewById(R.id.subject_chip_group);
@@ -160,6 +159,7 @@ public class HomeFragment extends Fragment {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.container, new Announcement())
+                    .addToBackStack(null)
                     .commit();
         });
         role = view.findViewById(R.id.role);
@@ -174,6 +174,7 @@ public class HomeFragment extends Fragment {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.container, new AddStudent())
+                    .addToBackStack(null)
                     .commit();
         });
 
@@ -302,6 +303,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void fetchSubjectsFromServer() {
+        loader.show();
         SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String adminId = sp.getString("admin_id", "");
 
@@ -310,6 +312,7 @@ public class HomeFragment extends Fragment {
         StringRequest request = new StringRequest(Request.Method.GET, fetchUrl,
                 response -> {
                     Log.d("fetchSubjects", response);
+                    loader.dismiss();
 
                     try {
                         JSONObject jsonObject = new JSONObject(response);
@@ -346,9 +349,6 @@ public class HomeFragment extends Fragment {
                                                 .replace(R.id.container, new SubjectsFragment())
                                                 .addToBackStack(null)
                                                 .commit();
-                                        BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottomNav);
-                                        bottomNav.setSelectedItemId(R.id.nav_subject);
-                                        return;
                                     });
 
                                     chipGroup.addView(chip);
@@ -373,12 +373,15 @@ public class HomeFragment extends Fragment {
     }
 
     private void sendSubjectToServer(String subject, String classFrom, String classTo, String fee) {
+        loader.show();
         SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String adminId = sp.getString("admin_id", "");
 
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 response -> {
                     Log.d("response", response);
+                    loader.dismiss();
+
 
                     String letter = subject;
                     String subjectName = letter.substring(0, 1).toUpperCase() + letter.substring(1).toLowerCase();
@@ -414,8 +417,10 @@ public class HomeFragment extends Fragment {
     }
 
     private void fetchDetails(String adminId) {
+        loader.show();
         StringRequest sr = new StringRequest(Request.Method.POST, url,
                 response -> {
+                    loader.dismiss();
                     try {
                         JSONObject json = new JSONObject(response);
                         if (json.getBoolean("success")) {
@@ -442,6 +447,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void fetchTotal() {
+        loader.show();
         String url = BASE_URL + "fetchData.php";
         SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String adminId = sp.getString("admin_id", "");
@@ -449,6 +455,7 @@ public class HomeFragment extends Fragment {
 
         StringRequest sr = new StringRequest(Request.Method.POST, url,
                 response -> {
+                    loader.dismiss();
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (jsonObject.getBoolean("success")) {
@@ -481,11 +488,13 @@ public class HomeFragment extends Fragment {
     }
 
     private void fetchAnnouncements() {
+        loader.show();
         String annUrl = BASE_URL + "announcement.php";
 
         StringRequest request = new StringRequest(Request.Method.POST, annUrl,
                 response -> {
                     Log.d("Announcementresponse", response);
+                    loader.dismiss();
                     try {
                         JSONObject json = new JSONObject(response);
                         if (json.getBoolean("success")) {
@@ -539,9 +548,11 @@ public class HomeFragment extends Fragment {
     }
 
     private void deleteAnnouncementFromServer(String id, int position) {
+        loader.show();
         String annUrl = BASE_URL + "announcement.php";
         StringRequest request = new StringRequest(Request.Method.POST, annUrl,
                 response -> {
+                    loader.dismiss();
                     try {
                         JSONObject json = new JSONObject(response);
                         if (json.getBoolean("success")) {

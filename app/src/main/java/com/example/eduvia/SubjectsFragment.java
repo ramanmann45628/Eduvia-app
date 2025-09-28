@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SubjectsFragment extends Fragment {
+    Loader loader;
     RecyclerView recyclerview;
     SubjectAdapter subjectAdapter;
     RequestQueue queue;
@@ -52,6 +53,7 @@ public class SubjectsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_subjects, container, false);
 
         recyclerview = v.findViewById(R.id.rvSubjects);
+        loader = new Loader(getContext());
         recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
 
         subjectAdapter = new SubjectAdapter(new SubjectAdapter.OnSubjectClickListener() {
@@ -153,11 +155,13 @@ public class SubjectsFragment extends Fragment {
 
 
             private void updateSubjectToServer(int subjectId, String name, String classFrom, String classTo, String fee) {
+                loader.show();
                 String updateUrl = BASE_URL + "subject.php";
 
                 StringRequest request = new StringRequest(Request.Method.POST, updateUrl,
                         response -> {
                             Log.d("UpdateSubject", response);
+                            loader.dismiss();
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
                                 boolean success = jsonObject.getBoolean("success");
@@ -260,6 +264,7 @@ public class SubjectsFragment extends Fragment {
     }
 
     private void fetchSubjects() {
+        loader.show();
         SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String adminId = sp.getString("admin_id", "");
 
@@ -268,6 +273,7 @@ public class SubjectsFragment extends Fragment {
         StringRequest sr = new StringRequest(Request.Method.GET, urlWithParams,
                 response -> {
                     Log.d("responseSubject", response);
+                    loader.dismiss();
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (jsonObject.getBoolean("success")) {

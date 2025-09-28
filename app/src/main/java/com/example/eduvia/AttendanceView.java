@@ -67,9 +67,19 @@ public class AttendanceView extends Fragment {
         attAdapter = new AttAdapter(requireContext(), new AttAdapter.OnItemClick() {
             @Override
             public void onClick(AttStModel s) {
-                // Handle click on student item
-                Toast.makeText(getContext(), "Clicked on " + s.getName(), Toast.LENGTH_SHORT).show();
+                AttendanceStDetails fragment = new AttendanceStDetails();
+
+                Bundle args = new Bundle();
+                args.putString("student_id", String.valueOf(s.getId())); // assuming getId() returns string, else use putInt
+                fragment.setArguments(args);
+
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.container, fragment)
+                        .addToBackStack(null)
+                        .commit();
             }
+
 
             @Override
             public void onStatusChange(int studentId, String status) {
