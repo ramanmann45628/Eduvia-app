@@ -36,6 +36,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    Loader loader;
 
     private MaterialToolbar toolbar;
     private ImageView profileImage;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         profileImage = findViewById(R.id.profileImage);
         bottomNav = findViewById(R.id.bottomNav);
+        loader = new Loader(this);
         setSupportActionBar(toolbar);
 
         profileImage.setOnClickListener(v -> {
@@ -61,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.container, new Profile())
                     .addToBackStack(null)
                     .commit();
-            bottomNav.setSelectedItemId(R.id.nav_profile);
         });
 
 
@@ -111,9 +112,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fetchDetails(String adminId) {
+        loader.show();
         StringRequest sr = new StringRequest(Request.Method.POST, url,
                 response -> {
                     Log.d(TAG, "ProfileResponse: " + response);
+                    loader.dismiss();
                     try {
                         JSONObject json = new JSONObject(response);
                         if (json.getBoolean("success")) {
@@ -201,5 +204,4 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sp = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         sp.edit().putString("profile_img", imageUrl).apply();
     }
-
 }

@@ -39,6 +39,7 @@ import java.util.Map;
 
 public class FeesFragment extends Fragment {
 
+    Loader loder;
     SharedPreferences sp;
     String url = BASE_URL + "fee_summery.php";
 
@@ -75,6 +76,7 @@ public class FeesFragment extends Fragment {
         filter = v.findViewById(R.id.filterButton);
         etSearch = v.findViewById(R.id.searchEditText);
         studentRecyclerView = v.findViewById(R.id.studentRecyclerView);
+        loder = new Loader(getContext());
 
         // ---- SharedPreferences ----
         sp = getActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
@@ -174,11 +176,13 @@ public class FeesFragment extends Fragment {
 
     // ---- Fetch students ----
     private void fetchStudents(String adminId, String status, String query) {
+        loder.show();
         String url = BASE_URL + "fee_summery.php";
 
         StringRequest sr = new StringRequest(Request.Method.POST, url,
                 response -> {
                     Log.d("StudentResponse", response);
+                    loder.dismiss();
                     try {
                         JSONObject obj = new JSONObject(response);
                         if (obj.getBoolean("success")) {
@@ -224,9 +228,11 @@ public class FeesFragment extends Fragment {
 
     // ---- Fetch fee summary ----
     private void fetchAllfeesummery(String adminId) {
+        loder.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
                     Log.d("Response", response);
+                    loder.dismiss();
                     try {
                         JSONObject obj = new JSONObject(response);
                         if (obj.getBoolean("success")) {

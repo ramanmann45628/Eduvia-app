@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
@@ -57,5 +58,6 @@ public class Splash_Screen extends AppCompatActivity {
                 finish(); // important to prevent splash reopening on back press
             }, SPLASH_TIME_OUT);
         }
+
     }
 }

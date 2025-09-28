@@ -32,6 +32,7 @@ import java.util.Map;
 
 
 public class Profile extends Fragment {
+    Loader loader;
     String url = BASE_URL + "fetchData.php";
     TextView edit_profile, total_subjects, total_students, announcement, fee_view, change_password, logout_btn, role;
     LinearLayout subject_view, student_view;
@@ -52,6 +53,7 @@ public class Profile extends Fragment {
         subject_view = view.findViewById(R.id.subject_view);
         student_view = view.findViewById(R.id.student_view);
         profileImage = view.findViewById(R.id.profile_image);
+        loader = new Loader(getContext());
         role = view.findViewById(R.id.role);
         SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String savedRole = sp.getString("role", "");
@@ -118,12 +120,14 @@ public class Profile extends Fragment {
     }
 
     private void fetchTotal() {
+        loader.show();
         SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String adminId = sp.getString("admin_id", "");
 
 
         StringRequest sr = new StringRequest(Request.Method.POST, url,
                 response -> {
+                    loader.dismiss();
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (jsonObject.getBoolean("success")) {
@@ -158,8 +162,10 @@ public class Profile extends Fragment {
     }
 
     private void fetchDetails(String adminId) {
+        loader.show();
         StringRequest sr = new StringRequest(Request.Method.POST, url,
                 response -> {
+                    loader.dismiss();
                     try {
                         JSONObject json = new JSONObject(response);
                         if (json.getBoolean("success")) {

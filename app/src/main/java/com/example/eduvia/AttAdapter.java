@@ -86,6 +86,9 @@ public class AttAdapter extends RecyclerView.Adapter<AttAdapter.VH> {
             s.setStatus("absent"); // update model
             if (onItemClick != null) onItemClick.onStatusChange(s.getId(), "absent");
         });
+        h.itemView.setOnClickListener(v -> {
+            if (onItemClick != null) onItemClick.onClick(s);
+        });
     }
 
 
