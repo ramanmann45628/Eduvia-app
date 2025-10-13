@@ -372,65 +372,62 @@ public class AddStudent extends Fragment {
         String parentName = etParentName.getText().toString().trim();
         String parentContact = etParentContact.getText().toString().trim();
 
-        // Validation
+// ===== VALIDATIONS =====
         if (fullName.isEmpty()) {
             etFullName.setError("Full name is required");
             etFullName.requestFocus();
             return;
         }
+
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             etEmail.setError("Enter a valid email");
             etEmail.requestFocus();
             return;
         }
-        if (contact.isEmpty() || contact.length() < 10) {
-            etContact.setError("Enter a valid contact number");
+
+// ✅ Validate mobile number format (Indian pattern)
+        String mobilePattern = "^[6-9]\\d{9}$";
+
+        if (!contact.matches(mobilePattern)) {
+            etContact.setError("Enter a valid 10-digit student number");
             etContact.requestFocus();
             return;
         }
+
+        if (!parentContact.matches(mobilePattern)) {
+            etParentContact.setError("Enter a valid 10-digit parent number");
+            etParentContact.requestFocus();
+            return;
+        }
+
+// ✅ Check student & parent numbers are not the same
+        if (contact.equals(parentContact)) {
+            Toast.makeText(getContext(), "Student and Parent numbers cannot be the same", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (dob.isEmpty()) {
             etDOB.setError("Select Date of Birth");
             etDOB.requestFocus();
             return;
         }
+
         if (parentName.isEmpty()) {
             etParentName.setError("Parent name is required");
             etParentName.requestFocus();
             return;
         }
-        if (parentContact.isEmpty() || parentContact.length() < 10) {
-            etParentContact.setError("Enter valid parent contact");
-            etParentContact.requestFocus();
-            return;
-        }
 
-        if (etClass.equals("Select Class")) {
+        if (etClass.getSelectedItem().toString().equals("Select Class")) {
             Toast.makeText(getContext(), "Please select class", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (etCustomSubjects.getVisibility() == View.VISIBLE) {
-            //  Take from custom input
-            subjects = etCustomSubjects.getText().toString().trim();
-        } else {
-            //  Take from chip selections
-            List<String> selectedSubjects = new ArrayList<>();
-            for (int i = 0; i < chipGroupSubjects.getChildCount(); i++) {
-                Chip chip = (Chip) chipGroupSubjects.getChildAt(i);
-                if (chip.isChecked()) {
-                    selectedSubjects.add(chip.getText().toString());
-                }
-            }
-            subjects = android.text.TextUtils.join(",", selectedSubjects);
-        }
 
-        if (subjects.isEmpty()) {
-            Toast.makeText(getContext(), "Enter or select at least one subject", Toast.LENGTH_SHORT).show();
-            return;
-        }
         if (gender == null) {
             Toast.makeText(getContext(), "Select Gender", Toast.LENGTH_SHORT).show();
             return;
         }
+
 
         // If all validations pass, then send request
         StringRequest request = new StringRequest(Request.Method.POST, url, response -> {

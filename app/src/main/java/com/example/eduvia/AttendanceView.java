@@ -37,6 +37,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class AttendanceView extends Fragment {
+    Loader loader;
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     private TabLayout dateTabs;
     private TextView tvClass, tvTotalStudents;
@@ -45,7 +46,6 @@ public class AttendanceView extends Fragment {
     private RequestQueue queue;
     private RecyclerView rvStudents;
     private AttAdapter attAdapter;
-
     private String lastExt = "th";
     private String selectedDate;
 
@@ -62,6 +62,8 @@ public class AttendanceView extends Fragment {
         tvTotalStudents = view.findViewById(R.id.tvTotalStudents);
         rvStudents = view.findViewById(R.id.recyclerAttendance);
         rvStudents.setLayoutManager(new LinearLayoutManager(getContext()));
+        loader = new Loader(requireContext());
+
 
         //Initialize adapter with status change callback
         attAdapter = new AttAdapter(requireContext(), new AttAdapter.OnItemClick() {
@@ -118,8 +120,13 @@ public class AttendanceView extends Fragment {
                 fetchTotalStudents(selectedClass);
             }
 
-            @Override public void onTabUnselected(TabLayout.Tab tab) {}
-            @Override public void onTabReselected(TabLayout.Tab tab) {}
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
         });
 
         // Load initial class data
@@ -140,12 +147,14 @@ public class AttendanceView extends Fragment {
 
     // Fetch students list
     private void fetchTotalStudents(String selectedClass) {
+        loader.show();
         String adminId = sp.getString("admin_id", "");
         Log.d("adminId", adminId);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
                     Log.v("response", response);
+                    loader.dismiss();
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (jsonObject.getBoolean("success")) {
@@ -196,13 +205,14 @@ public class AttendanceView extends Fragment {
     }
 
     private void updateAttendance(int studentId, String status) {
+        loader.show();
         String adminId = sp.getString("admin_id", "");
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 response -> {
                     Log.d("UpdateAttendance", response);
                     Log.d("UpdateAttendance", "AdminId=" + adminId);
                     Log.d("UpdateAttendance", "Status=" + status);
-
+                    loader.dismiss();
 
                     try {
                         JSONObject json = new JSONObject(response);
@@ -224,7 +234,6 @@ public class AttendanceView extends Fragment {
                 params.put("studentId", String.valueOf(studentId));
                 params.put("date", selectedDate);
                 params.put("status", status.toLowerCase().trim());
-
 
 
                 return params;
