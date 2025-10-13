@@ -50,11 +50,19 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="20dp"
-            android:text="Login here"
+            android:text="SignIn to EDUVIA"
             android:textColor="#000"
             android:textSize="22sp"
             android:textStyle="bold" />
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="8dp"
+            android:text="Email Address"
+            android:textColor="@color/tt_text"
+            android:textSize="18sp"
+            android:textStyle="bold" />
         <EditText
             android:id="@+id/etemail"
             android:layout_width="match_parent"
@@ -63,12 +71,19 @@
             android:hint="Email address"
             android:padding="15dp"
             android:textColorHint="#ACACAC" />
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="8dp"
+            android:text="Password"
+            android:textColor="@color/tt_text"
+            android:textSize="18sp"
+            android:textStyle="bold" />
         <EditText
             android:id="@+id/etpassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:background="@drawable/input_background"
             android:hint="Password"
             android:inputType="textPassword"

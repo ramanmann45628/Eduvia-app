@@ -37,6 +37,7 @@ public class AttendanceStDetails extends Fragment {
     private CalendarView cal;
     private SharedPreferences sp;
     private String url = BASE_URL + "attendance.php";
+    Loader loader;
 
     private TextView tvClass, TodayStatus, tvName, tvselectedDate, tvSelectedMonthYear, tvPercentage, tvTotalDays;
     private ProgressBar progressAttendance;
@@ -44,7 +45,7 @@ public class AttendanceStDetails extends Fragment {
 
     private String studentId = "1";
     private String studentStartDate;
-    private Map<String, String> attendanceMap = new HashMap<>(); // key=date, value=status
+    private Map<String, String> attendanceMap = new HashMap<>(); 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,6 +69,7 @@ public class AttendanceStDetails extends Fragment {
         ivAbsent = view.findViewById(R.id.ivAbsent);
         ivPresent = view.findViewById(R.id.ivPresent);
         cal = view.findViewById(R.id.calendarView);
+        loader = new Loader(getContext());
 
         // Disable attendance clicks until data loaded
         ivPresent.setEnabled(false);
@@ -91,9 +93,11 @@ public class AttendanceStDetails extends Fragment {
     }
 
     private void fetchStudentSummary(int day, int month, int year) {
+        loader.show();
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 response -> {
             Log.d("Response", response);
+            loader.dismiss();
                     try {
                         JSONObject json = new JSONObject(response);
                         if (json.getBoolean("success")) {
@@ -204,6 +208,7 @@ public class AttendanceStDetails extends Fragment {
     }
 
     private void markAttendance(String status) {
+        loader.show();
         String adminId = sp.getString("admin_id", "");
         if (adminId.isEmpty()) {
             Toast.makeText(getContext(), "Admin ID missing", Toast.LENGTH_SHORT).show();
@@ -227,6 +232,7 @@ public class AttendanceStDetails extends Fragment {
 
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 response -> {
+            loader.dismiss();
                     try {
                         JSONObject json = new JSONObject(response);
                         if (json.getBoolean("success")) {

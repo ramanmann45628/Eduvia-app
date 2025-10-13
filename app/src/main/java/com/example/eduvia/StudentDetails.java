@@ -5,7 +5,9 @@ import static com.example.eduvia.SignUp.BASE_URL;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,6 +40,7 @@ public class StudentDetails extends Fragment {
             tvStatususer, tvSubjects, tvGender, tvParentName,
             tvParentContact, tvRegDate, tv_total_fee,tvEdit;
     ImageView imgProfile;
+    Loader loader;
     private Button btnBack, btnDelete;
     private SwitchMaterial switchStatus;
 
@@ -66,6 +69,7 @@ public class StudentDetails extends Fragment {
         tvStatususer = view.findViewById(R.id.tvStatususer);
         tvEdit = view.findViewById(R.id.tvEdit);
         imgProfile = view.findViewById(R.id.imgProfile);
+        loader = new Loader(getContext());
 
         tvEdit.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
@@ -109,6 +113,7 @@ public class StudentDetails extends Fragment {
      * Update Active/Inactive Status
      */
     private void activeStatus(boolean isActive) {
+        loader.show();
         SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String adminId = sp.getString("admin_id", "");
         String status = isActive ? "1" : "0";
@@ -117,6 +122,7 @@ public class StudentDetails extends Fragment {
 
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 response -> {
+                    loader.dismiss();
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (jsonObject.getBoolean("success")) {
@@ -164,12 +170,14 @@ public class StudentDetails extends Fragment {
      * Delete Student
      */
     private void DeleteStudent(String studentId) {
+        loader.show();
         SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String adminId = sp.getString("admin_id", "");
         String url = BASE_URL + "student.php";
 
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 response -> {
+                    loader.dismiss();
                     Log.d("DeleteStudentResponse", response);
                     Toast.makeText(getContext(), "Student deleted successfully", Toast.LENGTH_SHORT).show();
                     requireActivity().getSupportFragmentManager().popBackStack();
@@ -191,6 +199,7 @@ public class StudentDetails extends Fragment {
         Volley.newRequestQueue(requireContext()).add(request);
     }
     private void fetchStudentsFromServer(String studentId) {
+        loader.show();
         SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String adminId = sp.getString("admin_id", "");
 
@@ -199,6 +208,7 @@ public class StudentDetails extends Fragment {
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 response -> {
             Log.d("response", response);
+                    loader.dismiss();
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (jsonObject.getBoolean("success")) {
@@ -258,6 +268,29 @@ public class StudentDetails extends Fragment {
 
                             switchStatus.setChecked(statusInt == 1);
 
+                            // Make phone numbers clickable
+                            tvPhone.setOnClickListener(v -> {
+                                String phoneNumber = tvPhone.getText().toString().trim();
+                                if (!phoneNumber.isEmpty()) {
+                                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                                    intent.setData(Uri.parse("tel:" + phoneNumber));
+                                    startActivity(intent);
+                                } else {
+                                    Toast.makeText(getContext(), "No phone number available", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                            tvParentContact.setOnClickListener(v -> {
+                                String phoneNumber = tvParentContact.getText().toString().trim();
+                                if (!phoneNumber.isEmpty()) {
+                                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                                    intent.setData(Uri.parse("tel:" + phoneNumber));
+                                    startActivity(intent);
+                                } else {
+                                    Toast.makeText(getContext(), "No parent contact number available", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
                             // Fee color
                             if (feeStatus.equals("Paid")) {
                                 tvFeeStatus.setTextColor(getResources().getColor(R.color.tt_success));
@@ -285,10 +318,12 @@ public class StudentDetails extends Fragment {
      * Fetch Fees Details
      */
     private void fetchFeesFromServer(String studentId) {
+        loader.show();
         String url = BASE_URL + "student.php?action=total_fees&student_id=" + studentId;
 
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 response -> {
+                    loader.dismiss();
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (jsonObject.getBoolean("success")) {
