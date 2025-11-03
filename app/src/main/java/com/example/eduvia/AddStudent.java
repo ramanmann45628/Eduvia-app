@@ -160,7 +160,7 @@ public class AddStudent extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         etClass.setAdapter(adapter);
 
-        // ✅ Listen for class selection
+        // Listen for class selection
         etClass.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
@@ -241,7 +241,6 @@ public class AddStudent extends Fragment {
         }
 
         StringRequest request = new StringRequest(Request.Method.POST, url, response -> {
-            Log.d("ResponseUpdate", response);
             try {
                 JSONObject obj = new JSONObject(response);
                 if (obj.getBoolean("success")) {
@@ -300,7 +299,6 @@ public class AddStudent extends Fragment {
 
         StringRequest request = new StringRequest(Request.Method.POST, url, response -> {
             try {
-                Log.d("ResponseGetStudent", response);
                 JSONObject obj = new JSONObject(response);
                 if (obj.getBoolean("success")) {
                     JSONObject student = obj.getJSONObject("student");
@@ -385,7 +383,7 @@ public class AddStudent extends Fragment {
             return;
         }
 
-// ✅ Validate mobile number format (Indian pattern)
+// Validate mobile number format (Indian pattern)
         String mobilePattern = "^[6-9]\\d{9}$";
 
         if (!contact.matches(mobilePattern)) {
@@ -400,7 +398,7 @@ public class AddStudent extends Fragment {
             return;
         }
 
-// ✅ Check student & parent numbers are not the same
+// Check student & parent numbers are not the same
         if (contact.equals(parentContact)) {
             Toast.makeText(getContext(), "Student and Parent numbers cannot be the same", Toast.LENGTH_SHORT).show();
             return;
@@ -431,7 +429,6 @@ public class AddStudent extends Fragment {
 
         // If all validations pass, then send request
         StringRequest request = new StringRequest(Request.Method.POST, url, response -> {
-            Log.d("ResponseAdd", response);
             JSONObject obj = null;
             try {
                 obj = new JSONObject(response);
@@ -472,14 +469,12 @@ public class AddStudent extends Fragment {
                 params.put("subjects", subjects);
                 params.put("class", etClass.getSelectedItem().toString());
 
-                // ✅ add encoded image
+                // add encoded image
                 if (selectedProfileBitmap != null) {
                     params.put("image", encodeImageToBase64(selectedProfileBitmap));
                 } else {
                     params.put("image", ""); // empty if not selected
                 }
-
-                Log.d("param", "POST Params: " + params);
                 return params;
         }
         };

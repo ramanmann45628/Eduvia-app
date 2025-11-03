@@ -18,7 +18,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
@@ -32,7 +31,6 @@ import java.util.Map;
 
 public class SignUp extends AppCompatActivity {
 
-//    public static final String BASE_URL = "http://10.0.2.2/tuition_centre/";
     public static final String BASE_URL = "https://eduvia.org.in/";
     TextView login, showMessage, tvResendOtp;
     ProgressDialog progressDialog;

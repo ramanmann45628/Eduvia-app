@@ -6,7 +6,6 @@ import static com.example.eduvia.SignUp.BASE_URL;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,7 +95,6 @@ public class AttendanceStDetails extends Fragment {
         loader.show();
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 response -> {
-            Log.d("Response", response);
             loader.dismiss();
                     try {
                         JSONObject json = new JSONObject(response);
@@ -291,7 +289,6 @@ public class AttendanceStDetails extends Fragment {
     }
 
     private void updateTodayStatusAndDot(String selectedDate) {
-        Log.d("AttendanceStDetails", "Updating today's status for date: " + selectedDate);
         String serverDate = convertDateToServerFormat(selectedDate); // dd-MM-yyyy -> yyyy-MM-dd
         String status = attendanceMap.getOrDefault(serverDate, "");
 

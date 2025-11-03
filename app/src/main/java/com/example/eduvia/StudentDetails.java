@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,7 +128,6 @@ public class StudentDetails extends Fragment {
                             int statusInt = jsonObject.getInt("status");
                             switchStatus.setChecked(statusInt == 1);
                             tvStatususer.setText(statusInt == 1 ? "Active" : "Inactive");
-                            Log.d("STATUS", "Student status updated: " + statusInt);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -178,7 +176,6 @@ public class StudentDetails extends Fragment {
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 response -> {
                     loader.dismiss();
-                    Log.d("DeleteStudentResponse", response);
                     Toast.makeText(getContext(), "Student deleted successfully", Toast.LENGTH_SHORT).show();
                     requireActivity().getSupportFragmentManager().popBackStack();
                 },
@@ -207,7 +204,6 @@ public class StudentDetails extends Fragment {
 
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 response -> {
-            Log.d("response", response);
                     loader.dismiss();
                     try {
                         JSONObject jsonObject = new JSONObject(response);
@@ -240,7 +236,6 @@ public class StudentDetails extends Fragment {
                             // Profile image
                             if (sobj.has("profile_img") && !sobj.isNull("profile_img")) {
                                 String profileImgUrl = sobj.getString("profile_img");
-                                Log.d("ProfileImageURL", profileImgUrl);
                                 String fullUrl = BASE_URL + profileImgUrl;
                                 if (!profileImgUrl.isEmpty()) {
                                     Glide.with(requireContext())
@@ -333,10 +328,6 @@ public class StudentDetails extends Fragment {
                             String paidAmount = jsonObject.getString("paid_amount");
                             String pendingAmount = jsonObject.getString("pending_amount");
 
-                            Log.d("Fees", "Total: " + totalAmount +
-                                    ", Paid: " + paidAmount +
-                                    ", Pending: " + pendingAmount);
-
                             tv_total_fee.setText("₹" + totalAmount);
 
                             // Fees details
@@ -346,9 +337,6 @@ public class StudentDetails extends Fragment {
                                 String subjectId = feeObj.getString("subject_id");
                                 String amount = feeObj.getString("amount");
                                 String status = feeObj.getString("status");
-                                Log.d("Fees", "Subject ID: " + subjectId +
-                                        ", Amount: " + amount +
-                                        ", Status: " + status);
                             }
                         } else {
                             Toast.makeText(getContext(),

@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,8 +92,6 @@ public class FeesFragment extends Fragment {
 
         // ---- Default hide overall amount ----
         tvOverall.setText("₹ ******");
-
-        Log.d("adminId", adminId);
 
         // ---- Load data ----
         fetchAllfeesummery(adminId);
@@ -181,7 +178,6 @@ public class FeesFragment extends Fragment {
 
         StringRequest sr = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    Log.d("StudentResponse", response);
                     loder.dismiss();
                     try {
                         JSONObject obj = new JSONObject(response);
@@ -231,7 +227,6 @@ public class FeesFragment extends Fragment {
         loder.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    Log.d("Response", response);
                     loder.dismiss();
                     try {
                         JSONObject obj = new JSONObject(response);

@@ -7,7 +7,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -77,7 +76,6 @@ public class ForgotPassword extends AppCompatActivity {
         StringRequest sr = new StringRequest(Request.Method.POST, url,
                 response -> {
                     progressDialog.dismiss();
-                    Log.d("response", response);
                     try {
                         JSONObject obj = new JSONObject(response);
                         Toast.makeText(ForgotPassword.this, obj.getString("message"), Toast.LENGTH_SHORT).show();
@@ -98,7 +96,7 @@ public class ForgotPassword extends AppCompatActivity {
             progressDialog.dismiss();
             // Volley error may have null message, show network error instead
             Toast.makeText(ForgotPassword.this, "Network error! Please try again.", Toast.LENGTH_SHORT).show();
-            Log.e("VolleyError", error.toString());
+
         }) {
             @Override
             protected Map<String, String> getParams() {

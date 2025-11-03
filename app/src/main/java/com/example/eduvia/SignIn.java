@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -89,7 +88,6 @@ public class SignIn extends AppCompatActivity {
     private void loginUser(String email, String password) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    Log.d("response", response);
                     try {
                         JSONObject obj = new JSONObject(response);
                         if (obj.getBoolean("success")) {
@@ -123,7 +121,6 @@ public class SignIn extends AppCompatActivity {
                 params.put("action", "login_admin");
                 params.put("email", email);
                 params.put("password", password);
-                Log.d("param", "POST Params: " + params);
                 return params;
             }
         };

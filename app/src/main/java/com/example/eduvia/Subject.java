@@ -1,6 +1,5 @@
 package com.example.eduvia;
 
-import android.util.Log;
 
 public class Subject {
     private int id;

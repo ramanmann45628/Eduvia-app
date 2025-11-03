@@ -3,8 +3,6 @@ package com.example.eduvia;
 import static com.example.eduvia.SignUp.BASE_URL;
 
 import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +54,6 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.VH> {
         h.tvName.setText(capitalizedName);
         String avatar = s.getAvatar();
         String avatarUrl = BASE_URL + avatar;
-        Log.d("avatarUrl", avatarUrl);
         // set profile image using glide
         if (s.getAvatar() != null) {
             Glide.with(h.itemView.getContext())
