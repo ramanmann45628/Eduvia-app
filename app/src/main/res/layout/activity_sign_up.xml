@@ -102,8 +102,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="12dp">
+                android:layout_marginBottom="12dp"
+                android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/etemail"
@@ -135,115 +135,114 @@
                         android:layout_height="40dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_check"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
                 </FrameLayout>
             </LinearLayout>
 
-<LinearLayout
-    android:id="@+id/otp_layout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
-
-
-            <TextView
-                android:layout_marginTop="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="OTP has been sent to your email"
-                android:textColor="#313131"
-                android:textSize="14sp" />
-
-            <!-- OTP input fields -->
             <LinearLayout
+                android:id="@+id/otp_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="start"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp">
+                android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/etOtp1"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@drawable/input_background"
-                    android:gravity="center"
-                    android:inputType="number"
-                    android:maxLength="1"
-                    android:textSize="20sp"
-                    android:imeOptions="actionNext"
-                    android:padding="10dp" />
 
-                <EditText
-                    android:id="@+id/etOtp2"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginStart="10dp"
-                    android:background="@drawable/input_background"
-                    android:gravity="center"
-                    android:inputType="number"
-                    android:maxLength="1"
-                    android:textSize="20sp"
-                    android:imeOptions="actionNext"
-                    android:padding="10dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="OTP has been sent to your email"
+                    android:textColor="#313131"
+                    android:textSize="14sp" />
 
-                <EditText
-                    android:id="@+id/etOtp3"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginStart="10dp"
-                    android:background="@drawable/input_background"
-                    android:gravity="center"
-                    android:inputType="number"
-                    android:maxLength="1"
-                    android:textSize="20sp"
-                    android:imeOptions="actionNext"
-                    android:padding="10dp" />
+                <!-- OTP input fields -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="start"
+                    android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/etOtp4"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginStart="10dp"
-                    android:background="@drawable/input_background"
-                    android:gravity="center"
-                    android:inputType="number"
-                    android:maxLength="1"
-                    android:textSize="20sp"
-                    android:imeOptions="actionDone"
-                    android:padding="10dp" />
+                    <EditText
+                        android:id="@+id/etOtp1"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/input_background"
+                        android:gravity="center"
+                        android:imeOptions="actionNext"
+                        android:inputType="number"
+                        android:maxLength="1"
+                        android:padding="10dp"
+                        android:textSize="20sp" />
+
+                    <EditText
+                        android:id="@+id/etOtp2"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/input_background"
+                        android:gravity="center"
+                        android:imeOptions="actionNext"
+                        android:inputType="number"
+                        android:maxLength="1"
+                        android:padding="10dp"
+                        android:textSize="20sp" />
+
+                    <EditText
+                        android:id="@+id/etOtp3"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/input_background"
+                        android:gravity="center"
+                        android:imeOptions="actionNext"
+                        android:inputType="number"
+                        android:maxLength="1"
+                        android:padding="10dp"
+                        android:textSize="20sp" />
+
+                    <EditText
+                        android:id="@+id/etOtp4"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/input_background"
+                        android:gravity="center"
+                        android:imeOptions="actionDone"
+                        android:inputType="number"
+                        android:maxLength="1"
+                        android:padding="10dp"
+                        android:textSize="20sp" />
+                </LinearLayout>
+                <!-- Resend OTP Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:gravity="end"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Didn’t receive the code?"
+                        android:textColor="#555555"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvResendOtp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="4dp"
+                        android:text=" Resend OTP"
+                        android:textColor="@color/tt_primary"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+
             </LinearLayout>
-    <!-- Resend OTP Section -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="end"
-        android:layout_marginBottom="15dp">
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Didn’t receive the code?"
-            android:textSize="14sp"
-            android:textColor="#555555"/>
-
-        <TextView
-            android:id="@+id/tvResendOtp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" Resend OTP"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="@color/tt_primary"
-            android:paddingStart="4dp"/>
-    </LinearLayout>
-
-
-</LinearLayout>
             <!-- Password -->
             <TextView
                 android:layout_width="wrap_content"
@@ -316,10 +315,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="30dp"
                 android:background="@drawable/btn_blue"
                 android:text="Submit"
                 android:textColor="@android:color/white"
-                android:layout_marginBottom="30dp"
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
