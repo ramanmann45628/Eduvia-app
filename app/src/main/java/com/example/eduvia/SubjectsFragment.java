@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -160,7 +159,6 @@ public class SubjectsFragment extends Fragment {
 
                 StringRequest request = new StringRequest(Request.Method.POST, updateUrl,
                         response -> {
-                            Log.d("UpdateSubject", response);
                             loader.dismiss();
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
@@ -272,7 +270,6 @@ public class SubjectsFragment extends Fragment {
 
         StringRequest sr = new StringRequest(Request.Method.GET, urlWithParams,
                 response -> {
-                    Log.d("responseSubject", response);
                     loader.dismiss();
                     try {
                         JSONObject jsonObject = new JSONObject(response);

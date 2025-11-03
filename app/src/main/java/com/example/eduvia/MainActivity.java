@@ -3,16 +3,14 @@ package com.example.eduvia;
 import static com.example.eduvia.SignIn.PREF_NAME;
 import static com.example.eduvia.SignUp.BASE_URL;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -115,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
         loader.show();
         StringRequest sr = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    Log.d(TAG, "ProfileResponse: " + response);
                     loader.dismiss();
                     try {
                         JSONObject json = new JSONObject(response);
@@ -138,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 },
-                error -> Log.e(TAG, "Volley Error showing here: " + error.getMessage())) {
+                error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show()) {
 
             @Override
             protected Map<String, String> getParams() {

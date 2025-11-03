@@ -6,7 +6,6 @@ import static com.example.eduvia.SignUp.BASE_URL;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,13 +111,11 @@ public class StudentFragment extends Fragment {
             }
         }
 
-        Log.d("urlWithParams", urlWithParams);
 
         StringRequest sr = new StringRequest(Request.Method.GET, urlWithParams,
                 response -> {
                     loader.dismiss();
                     try {
-                        Log.d("Studentresponse", response);
                         JSONObject jsonObject = new JSONObject(response);
 
                         if (jsonObject.getBoolean("success")) {

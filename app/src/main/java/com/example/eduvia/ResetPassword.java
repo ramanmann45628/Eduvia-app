@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -81,7 +80,6 @@ public class ResetPassword extends AppCompatActivity {
         // Send to server
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    Log.d("Response", response);
                     try {
                         JSONObject obj = new JSONObject(response);
                         boolean success = obj.getBoolean("success");
@@ -107,7 +105,6 @@ public class ResetPassword extends AppCompatActivity {
                     }
                 },
                 error -> {
-                    Log.e("VolleyError", "Error: " + error.toString());
                     Toast.makeText(this, "Network error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
         ) {

@@ -1,6 +1,6 @@
 package com.example.eduvia;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import static com.example.eduvia.SignIn.PREF_NAME;
 import static com.example.eduvia.SignUp.BASE_URL;
 
@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -187,7 +186,7 @@ public class Profile extends Fragment {
                         e.printStackTrace();
                     }
                 },
-                error -> Log.e(TAG, "Volley Error: " + error.getMessage())) {
+                error ->Toast.makeText(getContext(), "Volley error", Toast.LENGTH_SHORT).show()) {
 
             @Override
             protected Map<String, String> getParams() {

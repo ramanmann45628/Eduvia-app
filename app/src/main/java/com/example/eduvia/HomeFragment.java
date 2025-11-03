@@ -1,7 +1,5 @@
 package com.example.eduvia;
 
-
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 import static com.example.eduvia.SignIn.PREF_NAME;
 import static com.example.eduvia.SignUp.BASE_URL;
 
@@ -10,7 +8,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -311,7 +308,6 @@ public class HomeFragment extends Fragment {
 
         StringRequest request = new StringRequest(Request.Method.GET, fetchUrl,
                 response -> {
-                    Log.d("fetchSubjects", response);
                     loader.dismiss();
 
                     try {
@@ -379,7 +375,6 @@ public class HomeFragment extends Fragment {
 
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    Log.d("response", response);
                     loader.dismiss();
 
 
@@ -433,7 +428,7 @@ public class HomeFragment extends Fragment {
                         e.printStackTrace();
                     }
                 },
-                error -> Log.e(TAG, "Volley Error: " + error.getMessage())) {
+                error -> Toast.makeText(getContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show()) {
 
             @Override
             protected Map<String, String> getParams() {
@@ -493,7 +488,6 @@ public class HomeFragment extends Fragment {
 
         StringRequest request = new StringRequest(Request.Method.POST, annUrl,
                 response -> {
-                    Log.d("Announcementresponse", response);
                     loader.dismiss();
                     try {
                         JSONObject json = new JSONObject(response);

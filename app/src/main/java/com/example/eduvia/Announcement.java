@@ -44,7 +44,6 @@ public class Announcement extends Fragment {
     RadioButton rbAll, rbClass;
     RequestQueue queue;
     Button btnSubmit, btnCancel;
-    SharedPreferences sp;
 
     String url = BASE_URL + "announcement.php";
 
@@ -79,7 +78,7 @@ public class Announcement extends Fragment {
 
         // Step 1: Prepare class list with hint
         List<String> classList = new ArrayList<>();
-        classList.add("Select Class"); // <-- hint
+        classList.add("Select Class");
         for (int i = 1; i <= 12; i++) {
             classList.add("" + i);
         }
@@ -90,7 +89,7 @@ public class Announcement extends Fragment {
                 android.R.layout.simple_spinner_item, classList) {
             @Override
             public boolean isEnabled(int position) {
-                return position != 0; // Disable first item (hint)
+                return position != 0;
             }
 
             @Override
@@ -98,7 +97,7 @@ public class Announcement extends Fragment {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
                 if (position == 0) {
-                    tv.setTextColor(Color.GRAY); // hint color
+                    tv.setTextColor(Color.GRAY);
                 } else {
                     tv.setTextColor(Color.BLACK);
                 }
@@ -286,8 +285,6 @@ public class Announcement extends Fragment {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response ->{
-                    Log.d("Response", response);
-
                     if (response.equals("success")) {
                         Toast.makeText(getContext(), "Announcement created successfully", Toast.LENGTH_SHORT).show();
                         etClass.setSelection(0);

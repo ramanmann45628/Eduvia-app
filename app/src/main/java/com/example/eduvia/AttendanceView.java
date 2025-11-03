@@ -6,7 +6,6 @@ import static com.example.eduvia.SignUp.BASE_URL;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -149,11 +148,9 @@ public class AttendanceView extends Fragment {
     private void fetchTotalStudents(String selectedClass) {
         loader.show();
         String adminId = sp.getString("admin_id", "");
-        Log.d("adminId", adminId);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    Log.v("response", response);
                     loader.dismiss();
                     try {
                         JSONObject jsonObject = new JSONObject(response);
@@ -185,9 +182,9 @@ public class AttendanceView extends Fragment {
                     }
                 },
                 error -> {
-                    Log.e("API_ERROR", "Error: " + error.toString());
+                    Toast.makeText(getContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     if (error.networkResponse != null) {
-                        Log.e("API_ERROR", "Status Code: " + error.networkResponse.statusCode);
+                      Toast.makeText(getContext(), "Error: " + new String(error.networkResponse.data), Toast.LENGTH_SHORT).show();
                     }
                 }) {
             @Override
@@ -209,9 +206,6 @@ public class AttendanceView extends Fragment {
         String adminId = sp.getString("admin_id", "");
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    Log.d("UpdateAttendance", response);
-                    Log.d("UpdateAttendance", "AdminId=" + adminId);
-                    Log.d("UpdateAttendance", "Status=" + status);
                     loader.dismiss();
 
                     try {
