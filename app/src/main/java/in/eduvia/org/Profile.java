@@ -33,7 +33,7 @@ import java.util.Map;
 public class Profile extends Fragment {
     Loader loader;
     String url = BASE_URL + "fetchData.php";
-    TextView edit_profile, total_subjects, total_students, announcement, fee_view, change_password, logout_btn, role;
+    TextView edit_profile, total_subjects, total_students, announcement, fee_view, change_password, logout_btn, role,userName;
     LinearLayout subject_view, student_view;
     ImageView profileImage;
 
@@ -54,6 +54,8 @@ public class Profile extends Fragment {
         profileImage = view.findViewById(R.id.profile_image);
         loader = new Loader(getContext());
         role = view.findViewById(R.id.role);
+        userName = view.findViewById(R.id.user_name);
+
         SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String savedRole = sp.getString("role", "");
         role.setText(savedRole);
@@ -162,19 +164,29 @@ public class Profile extends Fragment {
 
     private void fetchDetails(String adminId) {
         loader.show();
+
         StringRequest sr = new StringRequest(Request.Method.POST, url,
                 response -> {
                     loader.dismiss();
                     try {
                         JSONObject json = new JSONObject(response);
+
                         if (json.getBoolean("success")) {
+
                             JSONObject data = json.getJSONObject("data");
+
+                            String nameStr = data.optString("name", "");
+                            String roleStr = data.optString("qualification", "");
+                            userName.setText(nameStr);
+                            role.setText(roleStr);
 
                             // Load profile image
                             String profileImg = data.optString("profile_img", "");
+
                             if (!profileImg.isEmpty()) {
-                                String fullUrl = profileImg.startsWith("http") ?
-                                        profileImg : BASE_URL + profileImg;
+                                String fullUrl = profileImg.startsWith("http")
+                                        ? profileImg
+                                        : BASE_URL + profileImg;
 
                                 Glide.with(this)
                                         .load(fullUrl)
@@ -182,11 +194,12 @@ public class Profile extends Fragment {
                                         .into(profileImage);
                             }
                         }
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 },
-                error ->Toast.makeText(getContext(), "Volley error", Toast.LENGTH_SHORT).show()) {
+                error -> Toast.makeText(getContext(), "Volley error", Toast.LENGTH_SHORT).show()) {
 
             @Override
             protected Map<String, String> getParams() {
@@ -196,7 +209,8 @@ public class Profile extends Fragment {
                 return params;
             }
         };
-        Volley.newRequestQueue(getContext()).add(sr);
+
+        Volley.newRequestQueue(requireContext()).add(sr);
     }
 
 }

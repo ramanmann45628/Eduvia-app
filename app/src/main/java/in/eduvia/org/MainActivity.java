@@ -3,8 +3,10 @@ package in.eduvia.org;
 import static in.eduvia.org.SignIn.PREF_NAME;
 import static in.eduvia.org.SignUp.BASE_URL;
 
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ConfigurationInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -32,6 +34,9 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
+
+
+
     private static final String TAG = "MainActivity";
     Loader loader;
 
@@ -47,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_main);
-
         // Init Views
         toolbar = findViewById(R.id.toolbar);
         profileImage = findViewById(R.id.profileImage);

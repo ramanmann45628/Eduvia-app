@@ -59,4 +59,11 @@ public class Splash_Screen extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Splash screen hide
+        overridePendingTransition(0,0);
+    }
 }

@@ -47,6 +47,8 @@ public class AttendanceView extends Fragment {
     private AttAdapter attAdapter;
     private String lastExt = "th";
     private String selectedDate;
+    private String selectedClass = "";
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -55,6 +57,12 @@ public class AttendanceView extends Fragment {
 
         // Initialize SharedPreferences
         sp = requireActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            selectedClass = bundle.getString("selectedClass", "");
+        }
 
         dateTabs = view.findViewById(R.id.dateTabs);
         tvClass = view.findViewById(R.id.tvClass);
@@ -111,26 +119,29 @@ public class AttendanceView extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 Calendar cal = Calendar.getInstance();
-                int index = tab.getPosition(); // selected tab index
+                int index = tab.getPosition();
+
                 cal.add(Calendar.DAY_OF_MONTH, -(dates.size() - 1 - index));
-                selectedDate = sdf.format(cal.getTime()); // update date
+                selectedDate = sdf.format(cal.getTime());
 
-                String selectedClass = getArguments() != null ? getArguments().getString("selectedClass") : "";
-                fetchTotalStudents(selectedClass);
+                // Fix here
+                Bundle bundle = getArguments();
+                if (bundle != null && bundle.containsKey("selectedClass")) {
+                    String selectedClass = bundle.getString("selectedClass", "");
+                    fetchTotalStudents(selectedClass);
+                } else {
+                    Toast.makeText(getContext(), "Class missing!", Toast.LENGTH_SHORT).show();
+                }
             }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
+            @Override public void onTabUnselected(TabLayout.Tab tab) {}
+            @Override public void onTabReselected(TabLayout.Tab tab) {}
         });
 
+
         // Load initial class data
-        if (getArguments() != null) {
-            String selectedClass = getArguments().getString("selectedClass");
+        if (bundle != null && bundle.containsKey("selectedClass")) {
+            String selectedClass = bundle.getString("selectedClass", "");
             if (selectedClass.equals("1")) lastExt = "st";
             else if (selectedClass.equals("2")) lastExt = "nd";
             else if (selectedClass.equals("3")) lastExt = "rd";
