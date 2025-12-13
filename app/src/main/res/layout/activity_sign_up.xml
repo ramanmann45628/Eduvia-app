@@ -99,27 +99,12 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:orientation="horizontal">
 
-                <!-- Email -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/emailLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <EditText
-                        android:id="@+id/etEmail"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="E-mail"
-                        android:background="@drawable/input_background"
-                        android:inputType="textEmailAddress" />
-
-                </com.google.android.material.textfield.TextInputLayout>
 
                 <EditText
                     android:id="@+id/etemail"
@@ -136,6 +121,15 @@
                     android:layout_height="55dp"
                     android:layout_marginStart="8dp">
 
+                    <Button
+                        android:id="@+id/btnVerifyEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/btn_blue"
+                        android:text="Verify"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold" />
+
                     <ImageView
                         android:id="@+id/ivVerified"
                         android:layout_width="40dp"
@@ -144,7 +138,7 @@
                         android:src="@drawable/ic_check"
                         android:visibility="gone" />
                 </FrameLayout>
-            </RelativeLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/otp_layout"
@@ -325,15 +319,6 @@
                 android:layout_marginBottom="30dp"
                 android:background="@drawable/btn_blue"
                 android:text="Submit"
-                android:textColor="@android:color/white"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/btnVerifyEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@drawable/btn_blue"
-                android:text="Verify"
                 android:textColor="@android:color/white"
                 android:textStyle="bold" />
         </LinearLayout>
