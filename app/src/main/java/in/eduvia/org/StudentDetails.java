@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
@@ -68,7 +69,10 @@ public class StudentDetails extends Fragment {
         tvStatususer = view.findViewById(R.id.tvStatususer);
         tvEdit = view.findViewById(R.id.tvEdit);
         imgProfile = view.findViewById(R.id.imgProfile);
-        loader = new Loader(getContext());
+        if (isAdded()) {
+            loader = new Loader((AppCompatActivity) requireActivity());
+        }
+
 
         tvEdit.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
@@ -112,7 +116,10 @@ public class StudentDetails extends Fragment {
      * Update Active/Inactive Status
      */
     private void activeStatus(boolean isActive) {
-        loader.show();
+        if (isAdded() && loader != null) {
+    loader.show();
+}
+
         SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String adminId = sp.getString("admin_id", "");
         String status = isActive ? "1" : "0";
@@ -121,7 +128,10 @@ public class StudentDetails extends Fragment {
 
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    loader.dismiss();
+                    if (isAdded() && loader != null) {
+    loader.dismiss();
+}
+
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (jsonObject.getBoolean("success")) {
@@ -168,14 +178,20 @@ public class StudentDetails extends Fragment {
      * Delete Student
      */
     private void DeleteStudent(String studentId) {
-        loader.show();
+        if (isAdded() && loader != null) {
+    loader.show();
+}
+
         SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String adminId = sp.getString("admin_id", "");
         String url = BASE_URL + "student.php";
 
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    loader.dismiss();
+                    if (isAdded() && loader != null) {
+    loader.dismiss();
+}
+
                     Toast.makeText(getContext(), "Student deleted successfully", Toast.LENGTH_SHORT).show();
                     requireActivity().getSupportFragmentManager().popBackStack();
                 },
@@ -196,7 +212,10 @@ public class StudentDetails extends Fragment {
         Volley.newRequestQueue(requireContext()).add(request);
     }
     private void fetchStudentsFromServer(String studentId) {
-        loader.show();
+        if (isAdded() && loader != null) {
+    loader.show();
+}
+
         SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String adminId = sp.getString("admin_id", "");
 
@@ -204,7 +223,10 @@ public class StudentDetails extends Fragment {
 
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 response -> {
-                    loader.dismiss();
+                    if (isAdded() && loader != null) {
+    loader.dismiss();
+}
+
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (jsonObject.getBoolean("success")) {
@@ -313,12 +335,18 @@ public class StudentDetails extends Fragment {
      * Fetch Fees Details
      */
     private void fetchFeesFromServer(String studentId) {
-        loader.show();
+        if (isAdded() && loader != null) {
+    loader.show();
+}
+
         String url = BASE_URL + "student.php?action=total_fees&student_id=" + studentId;
 
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 response -> {
-                    loader.dismiss();
+                    if (isAdded() && loader != null) {
+    loader.dismiss();
+}
+
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (jsonObject.getBoolean("success")) {

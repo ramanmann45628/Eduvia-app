@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,7 +44,10 @@ public class StudentFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_student, container, false);
         add_student = v.findViewById(R.id.add_student);
         rvStudents = v.findViewById(R.id.rvStudents);
-        loader = new Loader(getContext());
+        if (isAdded()) {
+            loader = new Loader((AppCompatActivity) requireActivity());
+        }
+
         rvStudents.setLayoutManager(new LinearLayoutManager(getContext()));
         studentAdapter = new StudentAdapter(student -> {
             // Pass data to fragment
@@ -87,7 +91,10 @@ public class StudentFragment extends Fragment {
     }
 
     private void fetchStudentsFromServer(String filter) {
-        loader.show();
+        if (isAdded() && loader != null) {
+    loader.show();
+}
+
         SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String adminId = sp.getString("admin_id", "");
 
@@ -114,7 +121,11 @@ public class StudentFragment extends Fragment {
 
         StringRequest sr = new StringRequest(Request.Method.GET, urlWithParams,
                 response -> {
-                    loader.dismiss();
+                    if (isAdded() && loader != null) {
+    loader.dismiss();
+}
+
+
                     try {
                         JSONObject jsonObject = new JSONObject(response);
 

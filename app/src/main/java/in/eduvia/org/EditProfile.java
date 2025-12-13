@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
@@ -68,7 +69,10 @@ public class EditProfile extends Fragment {
         upload_img = view1.findViewById(R.id.upload_img);
         save_btn_img = view1.findViewById(R.id.save_btn_img);
         profile_image = view1.findViewById(R.id.profile_image); // ✅ initialize
-        loader = new Loader(getContext());
+        if (isAdded()) {
+            loader = new Loader((AppCompatActivity) requireActivity());
+        }
+
         // Save button disabled by default
         save_btn.setEnabled(false);
         save_btn.setAlpha(0.5f);
@@ -122,7 +126,10 @@ public class EditProfile extends Fragment {
     }
 
     private void uploadProfileImage(Bitmap bitmap) {
-        loader.show();
+        if (isAdded() && loader != null) {
+    loader.show();
+}
+
         sp = requireActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         String adminId = sp.getString("admin_id", "");
 
@@ -134,7 +141,10 @@ public class EditProfile extends Fragment {
 
         StringRequest sr = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    loader.dismiss();
+                    if (isAdded() && loader != null) {
+                        loader.dismiss();
+                    }
+
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (jsonObject.getBoolean("success")) {
@@ -201,13 +211,19 @@ public class EditProfile extends Fragment {
     }
 
     private void updateAdminProfile(String s, String s2, String s3) {
-        loader.show();
+        if (isAdded() && loader != null) {
+    loader.show();
+}
+
         SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         String adminId = sp.getString("admin_id", "");
 
         StringRequest sr = new StringRequest(Request.Method.POST, url,
                 response -> {
+                    if (isAdded() && loader != null) {
                         loader.dismiss();
+                    }
+
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (jsonObject.getBoolean("success")) {
@@ -242,14 +258,20 @@ public class EditProfile extends Fragment {
     }
 
     private void fetch_data() {
-        loader.show();
+        if (isAdded() && loader != null) {
+    loader.show();
+}
+
         SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         String adminId = sp.getString("admin_id", "");
 
         StringRequest sr = new StringRequest(Request.Method.POST, url,
                 response -> {
 
-                    loader.dismiss();
+                    if (isAdded() && loader != null) {
+                        loader.dismiss();
+                    }
+
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (jsonObject.getBoolean("success")) {

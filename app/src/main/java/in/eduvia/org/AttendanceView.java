@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -69,7 +70,10 @@ public class AttendanceView extends Fragment {
         tvTotalStudents = view.findViewById(R.id.tvTotalStudents);
         rvStudents = view.findViewById(R.id.recyclerAttendance);
         rvStudents.setLayoutManager(new LinearLayoutManager(getContext()));
-        loader = new Loader(requireContext());
+        if (isAdded()) {
+            loader = new Loader((AppCompatActivity) requireActivity());
+        }
+
 
 
         //Initialize adapter with status change callback
@@ -157,12 +161,18 @@ public class AttendanceView extends Fragment {
 
     // Fetch students list
     private void fetchTotalStudents(String selectedClass) {
-        loader.show();
+        if (isAdded() && loader != null) {
+    loader.show();
+}
+
         String adminId = sp.getString("admin_id", "");
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    loader.dismiss();
+                    if (isAdded() && loader != null) {
+                        loader.dismiss();
+                    }
+
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (jsonObject.getBoolean("success")) {
@@ -213,11 +223,17 @@ public class AttendanceView extends Fragment {
     }
 
     private void updateAttendance(int studentId, String status) {
-        loader.show();
+        if (isAdded() && loader != null) {
+    loader.show();
+}
+
         String adminId = sp.getString("admin_id", "");
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    loader.dismiss();
+                    if (isAdded() && loader != null) {
+                        loader.dismiss();
+                    }
+
 
                     try {
                         JSONObject json = new JSONObject(response);

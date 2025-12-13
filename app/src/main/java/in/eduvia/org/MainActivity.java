@@ -35,8 +35,6 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
 
-
-
     private static final String TAG = "MainActivity";
     Loader loader;
 
@@ -56,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         profileImage = findViewById(R.id.profileImage);
         bottomNav = findViewById(R.id.bottomNav);
-        loader = new Loader(this);
+        loader = new Loader(MainActivity.this);
+
         setSupportActionBar(toolbar);
 
         profileImage.setOnClickListener(v -> {
@@ -113,22 +112,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fetchDetails(String adminId) {
+
+        if (isFinishing() || isDestroyed()) return;
+
         loader.show();
+
         StringRequest sr = new StringRequest(Request.Method.POST, url,
                 response -> {
+
+                    if (isFinishing() || isDestroyed()) return;
+
                     loader.dismiss();
+
                     try {
                         JSONObject json = new JSONObject(response);
                         if (json.getBoolean("success")) {
+
                             JSONObject data = json.getJSONObject("data");
-
-                            // Load profile image
                             String profileImg = data.optString("profile_img", "");
-                            if (!profileImg.isEmpty()) {
-                                String fullUrl = profileImg.startsWith("http") ?
-                                        profileImg : BASE_URL + profileImg;
 
-                                Glide.with(this)
+                            if (!profileImg.isEmpty() && profileImage != null) {
+
+                                String fullUrl = profileImg.startsWith("http")
+                                        ? profileImg
+                                        : BASE_URL + profileImg;
+
+                                // ✅ SAFE GLIDE
+                                Glide.with(profileImage) // <-- IMPORTANT
                                         .load(fullUrl)
                                         .placeholder(R.drawable.user_profile)
                                         .into(profileImage);
@@ -138,7 +148,13 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 },
-                error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show()) {
+                error -> {
+                    if (!isFinishing() && !isDestroyed()) {
+                        loader.dismiss();
+                        Toast.makeText(MainActivity.this,
+                                "Network error", Toast.LENGTH_SHORT).show();
+                    }
+                }) {
 
             @Override
             protected Map<String, String> getParams() {
@@ -148,7 +164,8 @@ public class MainActivity extends AppCompatActivity {
                 return params;
             }
         };
-        Volley.newRequestQueue(this).add(sr);
+
+        Volley.newRequestQueue(getApplicationContext()).add(sr);
     }
 
     public void onLoginSuccess() {
@@ -194,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().popBackStack();
         return true;
     }
+
     public void updateToolbarImage(String imageUrl) {
         Glide.with(this)
                 .load(imageUrl)
@@ -203,5 +221,14 @@ public class MainActivity extends AppCompatActivity {
         // Also save in SharedPreferences (for persistence)
         SharedPreferences sp = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         sp.edit().putString("profile_img", imageUrl).apply();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (loader != null) {
+            loader.release();
+            loader = null;
+        }
+        super.onDestroy();
     }
 }
