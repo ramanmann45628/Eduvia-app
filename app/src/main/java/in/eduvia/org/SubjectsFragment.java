@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -52,7 +53,10 @@ public class SubjectsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_subjects, container, false);
 
         recyclerview = v.findViewById(R.id.rvSubjects);
-        loader = new Loader(getContext());
+        if (isAdded()) {
+            loader = new Loader((AppCompatActivity) requireActivity());
+        }
+
         recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
 
         subjectAdapter = new SubjectAdapter(new SubjectAdapter.OnSubjectClickListener() {
@@ -154,12 +158,19 @@ public class SubjectsFragment extends Fragment {
 
 
             private void updateSubjectToServer(int subjectId, String name, String classFrom, String classTo, String fee) {
-                loader.show();
+                if (isAdded() && loader != null) {
+    loader.show();
+}
+
                 String updateUrl = BASE_URL + "subject.php";
 
                 StringRequest request = new StringRequest(Request.Method.POST, updateUrl,
                         response -> {
-                            loader.dismiss();
+                            if (isAdded() && loader != null) {
+    loader.dismiss();
+}
+
+
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
                                 boolean success = jsonObject.getBoolean("success");
@@ -262,7 +273,10 @@ public class SubjectsFragment extends Fragment {
     }
 
     private void fetchSubjects() {
-        loader.show();
+        if (isAdded() && loader != null) {
+    loader.show();
+}
+
         SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String adminId = sp.getString("admin_id", "");
 
@@ -270,7 +284,11 @@ public class SubjectsFragment extends Fragment {
 
         StringRequest sr = new StringRequest(Request.Method.GET, urlWithParams,
                 response -> {
-                    loader.dismiss();
+                    if (isAdded() && loader != null) {
+    loader.dismiss();
+}
+
+
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (jsonObject.getBoolean("success")) {

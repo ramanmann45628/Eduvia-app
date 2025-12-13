@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
@@ -52,7 +53,10 @@ public class Profile extends Fragment {
         subject_view = view.findViewById(R.id.subject_view);
         student_view = view.findViewById(R.id.student_view);
         profileImage = view.findViewById(R.id.profile_image);
-        loader = new Loader(getContext());
+        if (isAdded()) {
+            loader = new Loader((AppCompatActivity) requireActivity());
+        }
+
         role = view.findViewById(R.id.role);
         userName = view.findViewById(R.id.user_name);
 
@@ -121,14 +125,21 @@ public class Profile extends Fragment {
     }
 
     private void fetchTotal() {
-        loader.show();
+        if (isAdded() && loader != null) {
+    loader.show();
+}
+
         SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String adminId = sp.getString("admin_id", "");
 
 
         StringRequest sr = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    loader.dismiss();
+                    if (isAdded() && loader != null) {
+    loader.dismiss();
+}
+
+
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (jsonObject.getBoolean("success")) {
@@ -163,11 +174,18 @@ public class Profile extends Fragment {
     }
 
     private void fetchDetails(String adminId) {
-        loader.show();
+        if (isAdded() && loader != null) {
+    loader.show();
+}
+
 
         StringRequest sr = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    loader.dismiss();
+                    if (isAdded() && loader != null) {
+    loader.dismiss();
+}
+
+
                     try {
                         JSONObject json = new JSONObject(response);
 

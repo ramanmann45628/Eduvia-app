@@ -19,6 +19,7 @@
     import android.widget.TextView;
     import android.widget.Toast;
 
+    import androidx.appcompat.app.AppCompatActivity;
     import androidx.core.content.ContextCompat;
     import androidx.fragment.app.Fragment;
     import androidx.recyclerview.widget.LinearLayoutManager;
@@ -61,7 +62,10 @@
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.fragment_home, container, false);
-            loader = new Loader(getContext());
+            if (isAdded()) {
+                loader = new Loader((AppCompatActivity) requireActivity());
+            }
+
             user_name = view.findViewById(R.id.user_name);
             addSubject = view.findViewById(R.id.add_subject);
             chipGroup = view.findViewById(R.id.subject_chip_group);
@@ -299,7 +303,10 @@
         }
 
         private void fetchSubjectsFromServer() {
-            loader.show();
+            if (isAdded()) {
+                loader.show();
+            }
+
             SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
             String adminId = sp.getString("admin_id", "");
 
@@ -307,7 +314,10 @@
 
             StringRequest request = new StringRequest(Request.Method.GET, fetchUrl,
                     response -> {
-                        loader.dismiss();
+                        if (isAdded() && loader != null) {
+    loader.dismiss();
+}
+
 
                         try {
                             JSONObject jsonObject = new JSONObject(response);
@@ -356,7 +366,6 @@
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Toast.makeText(getContext(), "Parse error", Toast.LENGTH_SHORT).show();
                         }
                     },
                     error -> {
@@ -368,13 +377,19 @@
         }
 
         private void sendSubjectToServer(String subject, String classFrom, String classTo, String fee) {
-            loader.show();
+            if (isAdded()) {
+                loader.show();
+            }
+
             SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
             String adminId = sp.getString("admin_id", "");
 
             StringRequest request = new StringRequest(Request.Method.POST, url,
                     response -> {
-                        loader.dismiss();
+                        if (isAdded() && loader != null) {
+    loader.dismiss();
+}
+
 
 
                         String letter = subject;
@@ -411,10 +426,16 @@
         }
 
         private void fetchDetails(String adminId) {
-            loader.show();
+            if (isAdded()) {
+                loader.show();
+            }
+
             StringRequest sr = new StringRequest(Request.Method.POST, url,
                     response -> {
-                        loader.dismiss();
+                        if (isAdded() && loader != null) {
+    loader.dismiss();
+}
+
                         try {
                             JSONObject json = new JSONObject(response);
                             if (json.getBoolean("success")) {
@@ -441,7 +462,10 @@
         }
 
         private void fetchTotal() {
-            loader.show();
+            if (isAdded()) {
+                loader.show();
+            }
+
             String url = BASE_URL + "fetchData.php";
             SharedPreferences sp = requireActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
             String adminId = sp.getString("admin_id", "");
@@ -449,7 +473,10 @@
 
             StringRequest sr = new StringRequest(Request.Method.POST, url,
                     response -> {
-                        loader.dismiss();
+                        if (isAdded() && loader != null) {
+    loader.dismiss();
+}
+
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             if (jsonObject.getBoolean("success")) {
@@ -482,12 +509,18 @@
         }
 
         private void fetchAnnouncements() {
-            loader.show();
+            if (isAdded()) {
+                loader.show();
+            }
+
             String annUrl = BASE_URL + "announcement.php";
 
             StringRequest request = new StringRequest(Request.Method.POST, annUrl,
                     response -> {
-                        loader.dismiss();
+                        if (isAdded() && loader != null) {
+    loader.dismiss();
+}
+
                         try {
                             JSONObject json = new JSONObject(response);
                             if (json.getBoolean("success")) {
@@ -541,11 +574,17 @@
         }
 
         private void deleteAnnouncementFromServer(String id, int position) {
-            loader.show();
+            if (isAdded()) {
+                loader.show();
+            }
+
             String annUrl = BASE_URL + "announcement.php";
             StringRequest request = new StringRequest(Request.Method.POST, annUrl,
                     response -> {
-                        loader.dismiss();
+                        if (isAdded() && loader != null) {
+    loader.dismiss();
+}
+
                         try {
                             JSONObject json = new JSONObject(response);
                             if (json.getBoolean("success")) {
@@ -570,6 +609,15 @@
                 }
             };
             Volley.newRequestQueue(requireContext()).add(request);
+        }
+
+        @Override
+        public void onDestroyView() {
+            if (loader != null) {
+                loader.release();
+                loader = null;
+            }
+            super.onDestroyView();
         }
 
 

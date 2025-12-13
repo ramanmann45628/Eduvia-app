@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
@@ -68,7 +69,10 @@ public class AttendanceStDetails extends Fragment {
         ivAbsent = view.findViewById(R.id.ivAbsent);
         ivPresent = view.findViewById(R.id.ivPresent);
         cal = view.findViewById(R.id.calendarView);
-        loader = new Loader(getContext());
+        if (isAdded()) {
+            loader = new Loader((AppCompatActivity) requireActivity());
+        }
+
 
         // Disable attendance clicks until data loaded
         ivPresent.setEnabled(false);
@@ -92,10 +96,19 @@ public class AttendanceStDetails extends Fragment {
     }
 
     private void fetchStudentSummary(int day, int month, int year) {
-        loader.show();
+        if (isAdded() && loader != null) {
+            if (isAdded() && loader != null) {
+    loader.show();
+}
+
+        }
+
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 response -> {
-            loader.dismiss();
+            if (isAdded() && loader != null) {
+    loader.dismiss();
+}
+
                     try {
                         JSONObject json = new JSONObject(response);
                         if (json.getBoolean("success")) {
@@ -206,7 +219,10 @@ public class AttendanceStDetails extends Fragment {
     }
 
     private void markAttendance(String status) {
-        loader.show();
+        if (isAdded() && loader != null) {
+    loader.show();
+}
+
         String adminId = sp.getString("admin_id", "");
         if (adminId.isEmpty()) {
             Toast.makeText(getContext(), "Admin ID missing", Toast.LENGTH_SHORT).show();
@@ -230,7 +246,10 @@ public class AttendanceStDetails extends Fragment {
 
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 response -> {
-            loader.dismiss();
+            if (isAdded() && loader != null) {
+    loader.dismiss();
+}
+
                     try {
                         JSONObject json = new JSONObject(response);
                         if (json.getBoolean("success")) {

@@ -18,6 +18,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,7 +39,7 @@ import java.util.Map;
 
 public class FeesFragment extends Fragment {
 
-    Loader loder;
+    Loader loader;
     SharedPreferences sp;
     String url = BASE_URL + "fee_summery.php";
 
@@ -75,7 +76,10 @@ public class FeesFragment extends Fragment {
         filter = v.findViewById(R.id.filterButton);
         etSearch = v.findViewById(R.id.searchEditText);
         studentRecyclerView = v.findViewById(R.id.studentRecyclerView);
-        loder = new Loader(getContext());
+        if (isAdded()) {
+            loader = new Loader((AppCompatActivity) requireActivity());
+        }
+
 
         // ---- SharedPreferences ----
         sp = getActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
@@ -173,12 +177,18 @@ public class FeesFragment extends Fragment {
 
     // ---- Fetch students ----
     private void fetchStudents(String adminId, String status, String query) {
-        loder.show();
+        if (isAdded() && loader != null) {
+            loader.show();
+        }
+
         String url = BASE_URL + "fee_summery.php";
 
         StringRequest sr = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    loder.dismiss();
+                    if (isAdded() && loader != null) {
+                        loader.dismiss();
+                    }
+
                     try {
                         JSONObject obj = new JSONObject(response);
                         if (obj.getBoolean("success")) {
@@ -224,10 +234,16 @@ public class FeesFragment extends Fragment {
 
     // ---- Fetch fee summary ----
     private void fetchAllfeesummery(String adminId) {
-        loder.show();
+        if (isAdded() && loader != null) {
+            loader.show();
+        }
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    loder.dismiss();
+                    if (isAdded() && loader != null) {
+                        loader.dismiss();
+                    }
+
                     try {
                         JSONObject obj = new JSONObject(response);
                         if (obj.getBoolean("success")) {
